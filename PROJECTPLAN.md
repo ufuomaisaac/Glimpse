@@ -13,7 +13,7 @@ detection, storage, and link enforcement are server-side; the client talks only 
 - **Presentation**: MVVM — ViewModels expose `StateFlow<ScreenState<T>>`; screens observe
 - **UI**: Compose Multiplatform
 - **DI**: Koin
-- **Navigation**: JetBrains Compose Navigation, nested graphs
+- **Navigation**: JetBrains Compose Navigation, nested graphs (a `navigation/` package, not a module)
 - **Network**: Ktorfit for JSON REST; raw Ktor `HttpClient` for upload/streaming (see Network Layer)
 - **Local storage**: DataStore (preferences). Add Room only if offline caching becomes a real need.
 - **Logging**: Kermit, used directly
@@ -21,8 +21,8 @@ detection, storage, and link enforcement are server-side; the client talks only 
 
 ## Module Structure
 
-Keep it flat. One shared module for all product code; platform entry points for each target.
-Do not create new Gradle modules unless a concrete constraint forces it (see When to Split below).
+Keep it flat. All product code lives in `cmp-shared`; the platform entry points are the only
+other modules. There are no per-feature or per-core Gradle modules — separation is by package.
 
 ```
 my-app/
@@ -30,37 +30,37 @@ my-app/
 ├── cmp-ios/              # iOS entry point (CocoaPods)
 ├── cmp-desktop/          # Desktop entry point
 ├── cmp-web/              # Web entry point (WASM) — primary recipient surface
-├── cmp-shared/           # Everything else lives here
-│   └── src/commonMain/kotlin/
-│       ├── core/
-│       │   ├── model/        # Domain data classes only, no platform deps
-│       │   ├── common/       # ScreenState + shared utilities
-│       │   ├── network/      # Ktor/Ktorfit services + UploadService
-│       │   └── data/         # Repositories (bridge network ↔ UI)
-│       ├── designsystem/     # Theme, typography, color tokens
-│       └── feature/
-│           ├── auth/         # Host login / registration
-│           ├── upload/       # Bulk photo upload + progress
-│           ├── dashboard/    # Cluster grid, rename, configure sharing
-│           ├── links/        # Link management: deactivate, regenerate, expiry
-│           └── gallery/      # Recipient view — no auth dependency (see below)
-└── cmp-navigation/       # Nav graphs — kept separate to avoid circular deps with cmp-shared
+└── cmp-shared/           # All product code lives here
+    └── src/commonMain/kotlin/
+        ├── core/
+        │   ├── model/        # Domain data classes only, no platform deps
+        │   ├── common/       # ScreenState + shared utilities
+        │   ├── network/      # Ktor/Ktorfit services + UploadService
+        │   └── data/         # Repositories (bridge network ↔ UI)
+        ├── designsystem/     # Theme, typography, color tokens
+        ├── navigation/       # ROOT graph assembly — calls each feature's graph extension
+        └── feature/
+            ├── auth/         # Host login / registration
+            ├── upload/       # Bulk photo upload + progress
+            ├── dashboard/    # Cluster grid, rename, configure sharing
+            ├── links/        # Link management: deactivate, regenerate, expiry
+            └── gallery/      # Recipient view — no auth dependency (see below)
 ```
 
-### When to Split into a New Gradle Module
-
-Only when one of these is true — not before:
-- Build times are measurably hurting and profiling shows a module boundary helps.
-- A team boundary makes a compile wall genuinely useful.
-- `feature/gallery` needs a compiler-enforced zero-auth guarantee (the one early split worth considering).
+Navigation is a **package**, not a separate module. In a flat project there's no module boundary
+to form a circular dependency across, and the graph-extension pattern below keeps the dependency
+one-way regardless. Platform entry points depend on `cmp-shared` and call the ROOT `NavHost` from
+the `navigation/` package.
+ 
 ---
 
 ## Dependency Direction (enforce by package convention, not Gradle walls)
 
 ```
-feature/* → core/data → core/network
-            core/data → core/model
-feature/* → designsystem
+feature/*  → core/data → core/network
+             core/data → core/model
+feature/*  → designsystem
+navigation → feature/*                # ROOT graph assembles features — one-way
 ```
 
 Rules:
@@ -68,6 +68,7 @@ Rules:
 - `core/network` never imports from `core/data`.
 - Features never import from other features — share data via repositories or navigation args.
 - `feature/gallery` never imports from `feature/auth` or touches auth state.
+- `navigation/` imports features to assemble the ROOT graph; **features never import `navigation/`** — each feature exposes a `NavGraphBuilder.xGraph(...)` extension and receives navigation as lambda callbacks (`onNavigateToX: () -> Unit`). This one-way flow is what removes any cycle.
 ---
 
 ## Navigation Structure
@@ -78,6 +79,10 @@ ROOT_GRAPH
   │     └── MAIN_GRAPH  # upload → dashboard → links
   └── SHARE_GRAPH       # recipient gallery; deep-linked, NO auth — peer, not child
 ```
+
+Assembled in the `navigation/` package of `cmp-shared`. The ROOT graph calls each feature's
+`NavGraphBuilder` extension and supplies navigation lambdas; features stay unaware of each other
+and of the assembler.
 
 `SHARE_GRAPH` is a **peer** of `AUTH_GRAPH`, not a child. It handles deep links at
 `https://yourapp.com/share/:token` without passing through `AUTH_GRAPH`. A password-protected
@@ -159,8 +164,11 @@ class UploadService(private val client: HttpClient) {
 feature/[name]/
 ├── ui/           # Composable screens — observe state, no business logic
 ├── viewmodel/    # ViewModel exposing StateFlow<ScreenState<T>>
-└── navigation/   # Route destinations + graph extension
+└── navigation/   # Route destinations + NavGraphBuilder.xGraph(...) extension
 ```
+
+Each feature's `navigation/` defines its own routes and a graph extension; the ROOT `navigation/`
+package (in `cmp-shared`) calls those extensions to assemble the full graph.
  
 ---
 
@@ -184,6 +192,7 @@ sealed interface ScreenState<out T> {
 - No business logic in Composables — it lives in ViewModels.
 - Repositories (`core/data`) own all network-vs-cache decisions.
 - `core/model` types are the only types that cross feature boundaries.
+- Features expose a `NavGraphBuilder` extension and take navigation lambdas; they never import the `navigation/` package or each other.
 - **Feature branches only** — never push to `main`:
 ```bash
   git checkout -b feature/[description]
@@ -205,8 +214,6 @@ sealed interface ScreenState<out T> {
 1. Create entry points (`cmp-android`, `cmp-web`, etc.) + `cmp-shared` with `core/model` and `core/network` — no UI yet, just data plumbing.
 2. Add `core/data` with one repository to validate the network → repository chain.
 3. Add `designsystem`.
-4. Add `feature/gallery` and run it in the WASM target — validate the recipient path end-to-end before building the host flow.
-5. Add `feature/auth`, `feature/upload`, `feature/dashboard`, `feature/links`.
-6. Add `cmp-navigation` to wire graphs together.
-7. Extract a Gradle module only when a real constraint (build time, team boundary, compile-time isolation) makes it worth the overhead.
- 
+4. Add `feature/gallery` (with its own `navigation/` graph extension) and run it in the WASM target — validate the recipient path end-to-end before building the host flow.
+5. Add `feature/auth`, `feature/upload`, `feature/dashboard`, `feature/links`, each shipping its own graph extension.
+6. Assemble the ROOT graph in the `navigation/` package as features land — it just calls each feature's extension and wires `AUTH_GRAPH` + `SHARE_GRAPH` under `ROOT_GRAPH`.
