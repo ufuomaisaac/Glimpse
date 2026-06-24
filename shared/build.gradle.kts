@@ -66,7 +66,6 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.logging)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.datastore.preferences)
             implementation(libs.kermit)
         }
         commonTest.dependencies {
@@ -76,13 +75,16 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.datastore.preferences)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.datastore.preferences)
         }
         jvmMain.dependencies {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.datastore.preferences)
         }
         jsMain.dependencies {
             implementation(libs.wrappers.browser)

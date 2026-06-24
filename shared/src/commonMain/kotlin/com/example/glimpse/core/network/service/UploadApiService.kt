@@ -1,0 +1,58 @@
+package com.example.glimpse.core.network.service
+
+import com.example.glimpse.core.model.UploadResult
+import com.example.glimpse.core.model.UploadSession
+import com.example.glimpse.core.network.ApiEndPoints
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.http.*
+import kotlinx.serialization.Serializable
+
+class UploadApiService(private val client: HttpClient) {
+
+    suspend fun createUpload(name: String, expiresAt: String): UploadSession {
+        return client.post(ApiEndPoints.CREATE_UPLOAD) {
+            contentType(ContentType.Application.Json)
+            setBody(CreateUploadRequest(name, expiresAt))
+        }.body()
+    }
+
+    @Serializable
+    private data class CreateUploadRequest(
+        val name: String,
+        val expiresAt: String,
+    )
+
+    suspend fun uploadPhotos(
+        sessionId: String,
+        photos: List<ByteArray>,
+        onProgress: (Float) -> Unit,
+    ): UploadResult {
+        return client.submitFormWithBinaryData(
+            url = ApiEndPoints.getPresignedUrls(sessionId),
+            formData = formData {
+                photos.forEachIndexed { index, bytes ->
+                    append(
+                        key = "photos[$index]",
+                        value = bytes,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, "image/jpeg")
+                            append(
+                                HttpHeaders.ContentDisposition,
+                                "filename=\"photo_$index.jpg\"",
+                            )
+                        },
+                    )
+                }
+            },
+        ) {
+            onUpload { bytesSent, totalBytes ->
+                if (totalBytes != null && totalBytes > 0L) {
+                    onProgress(bytesSent.toFloat() / totalBytes.toFloat())
+                }
+            }
+        }.body()
+    }
+}
