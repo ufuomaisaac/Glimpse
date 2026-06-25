@@ -1,29 +1,29 @@
 package com.example.glimpse.core.network.service
 
 import com.example.glimpse.core.model.UploadResult
-import com.example.glimpse.core.model.UploadSession
 import com.example.glimpse.core.network.ApiEndPoints
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.serialization.Serializable
 
 class UploadApiService(private val client: HttpClient) {
 
-    suspend fun createUpload(name: String, expiresAt: String): UploadSession {
+    suspend fun createUpload(name: String, expiresAt: String): HttpResponse {
         return client.post(ApiEndPoints.CREATE_UPLOAD) {
             contentType(ContentType.Application.Json)
             setBody(CreateUploadRequest(name, expiresAt))
-        }.body()
+        }
     }
 
-    @Serializable
-    private data class CreateUploadRequest(
-        val name: String,
-        val expiresAt: String,
-    )
+    suspend fun renameUpload(uploadId: String, name: String): HttpResponse {
+        return client.patch(ApiEndPoints.updateUpload(uploadId)) {
+            contentType(ContentType.Application.Json)
+            setBody(RenameUploadRequest(name))
+        }
+    }
 
     suspend fun uploadPhotos(
         sessionId: String,
@@ -55,4 +55,13 @@ class UploadApiService(private val client: HttpClient) {
             }
         }.body()
     }
+
+    @Serializable
+    private data class CreateUploadRequest(
+        val name: String,
+        val expiresAt: String,
+    )
+
+    @Serializable
+    private data class RenameUploadRequest(val name: String)
 }

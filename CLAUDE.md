@@ -263,7 +263,6 @@ val repositoryModule = module {
     single<FeatureRepository> { FeatureRepositoryImpl(get()) }
 }
 ```
-
 Register the `HttpClient` singleton once in `NetworkModule`. Every service receives it via `get()`.
 
 DI instructions for a single-module plain-Ktor app

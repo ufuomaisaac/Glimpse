@@ -3,7 +3,7 @@ package com.example.glimpse.core.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UploadSession(
+data class Upload(
     val id: String,
     val name: String,
     val hostId: String,
