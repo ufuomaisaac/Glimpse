@@ -6,6 +6,7 @@ import com.example.glimpse.core.network.ApiEndPoints
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 
 class ClusterApiService(private val client: HttpClient) {
@@ -15,7 +16,7 @@ class ClusterApiService(private val client: HttpClient) {
     }
 
     suspend fun getClusters(): List<FaceCluster> {
-        return client.get(ApiEndPoints.GET_RECEIVED_CLUSTER).body()
+        return client.get(ApiEndPoints.GET_RECEIVED_CLUSTER).body<List<FaceCluster>>()
     }
 
     suspend fun createLink(clusterId: String): ShareLink {

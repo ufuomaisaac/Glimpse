@@ -1,8 +1,8 @@
 package com.example.glimpse.core.network.service
 
-import com.example.glimpse.core.model.UploadResult
 import com.example.glimpse.core.network.ApiEndPoints
 import io.ktor.client.*
+import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -29,7 +29,7 @@ class UploadApiService(private val client: HttpClient) {
         sessionId: String,
         photos: List<ByteArray>,
         onProgress: (Float) -> Unit,
-    ): UploadResult {
+    ): HttpResponse {
         return client.submitFormWithBinaryData(
             url = ApiEndPoints.getPresignedUrls(sessionId),
             formData = formData {
@@ -53,7 +53,7 @@ class UploadApiService(private val client: HttpClient) {
                     onProgress(bytesSent.toFloat() / totalBytes.toFloat())
                 }
             }
-        }.body()
+        }
     }
 
     @Serializable
