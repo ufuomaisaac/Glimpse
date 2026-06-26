@@ -1,42 +1,37 @@
 package com.example.glimpse.core.network.service
 
-import com.example.glimpse.core.model.PaginatedUploads
-import com.example.glimpse.core.model.Upload
 import com.example.glimpse.core.model.UploadStatus
 import com.example.glimpse.core.network.ApiEndPoints
+import com.example.glimpse.core.network.dto.PaginatedUploadsDto
+import com.example.glimpse.core.network.dto.UploadDto
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.Serializable
 
 class UploadApiService(private val client: HttpClient) {
 
-    fun getAllUploads(
+    suspend fun getAllUploads(
         page: Int? = null,
         limit: Int? = null,
         sort: String? = null,
         order: String? = null,
         search: String? = null,
         status: UploadStatus? = null,
-    ): Flow<PaginatedUploads> = flow {
-        emit(client.get(ApiEndPoints.GET_ALL_UPLOADS) {
-            page?.let { parameter("page", it) }
-            limit?.let { parameter("limit", it) }
-            sort?.let { parameter("sort", it) }
-            order?.let { parameter("order", it) }
-            search?.let { parameter("search", it) }
-            status?.let { parameter("status", it.name.lowercase()) }
-        }.body())
-    }
+    ): PaginatedUploadsDto = client.get(ApiEndPoints.GET_ALL_UPLOADS) {
+        page?.let { parameter("page", it) }
+        limit?.let { parameter("limit", it) }
+        sort?.let { parameter("sort", it) }
+        order?.let { parameter("order", it) }
+        search?.let { parameter("search", it) }
+        status?.let { parameter("status", it.name.lowercase()) }
+    }.body()
 
-    fun getUploadById(id: String): Flow<Upload> = flow {
-        emit(client.get(ApiEndPoints.getUploadById(id)).body())
-    }
+    suspend fun getUploadById(id: String): UploadDto =
+        client.get(ApiEndPoints.getUploadById(id)).body()
 
     suspend fun deleteUpload(id: String): HttpResponse =
         client.delete(ApiEndPoints.deleteUpload(id))

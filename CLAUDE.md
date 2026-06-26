@@ -114,20 +114,18 @@ Add new constants here when adding a feature. Never hardcode path strings outsid
 
 Services are plain classes that hold a `HttpClient`. No annotations — raw Ktor only.
 
-**GET → returns `Flow<T>`**
-**POST / PUT / DELETE → returns `HttpResponse` (suspend)**
+**All functions are `suspend fun`.** GET returns `T` directly. POST / PUT / DELETE returns `HttpResponse`.
+`Flow` belongs in the repository layer, not the service.
 
 ```kotlin
 // core/network/services/FeatureService.kt
 class FeatureService(private val client: HttpClient) {
 
-    fun getFeatureList(): Flow<List<FeatureDto>> = flow {
-        emit(client.get(ApiEndPoints.FEATURE).body())
-    }
+    suspend fun getFeatureList(): List<FeatureDto> =
+        client.get(ApiEndPoints.FEATURE).body()
 
-    fun getFeatureById(id: Long): Flow<FeatureDto> = flow {
-        emit(client.get("${ApiEndPoints.FEATURE}/$id").body())
-    }
+    suspend fun getFeatureById(id: Long): FeatureDto =
+        client.get("${ApiEndPoints.FEATURE}/$id").body()
 
     suspend fun createFeature(payload: FeaturePayload): HttpResponse =
         client.post(ApiEndPoints.FEATURE) { setBody(payload) }
@@ -193,7 +191,7 @@ class FeatureRepositoryImpl(
     override fun getFeatureList(): Flow<DataState<List<Feature>>> = flow {
         emit(DataState.Loading)
         try {
-            val result = featureService.getFeatureList().first()
+            val result = featureService.getFeatureList()
             emit(DataState.Success(result.map { it.toDomain() }))
         } catch (e: Exception) {
             emit(DataState.Error(e.message ?: "Unknown error"))
@@ -203,7 +201,7 @@ class FeatureRepositoryImpl(
     override fun getFeatureById(id: Long): Flow<DataState<Feature>> = flow {
         emit(DataState.Loading)
         try {
-            val result = featureService.getFeatureById(id).first()
+            val result = featureService.getFeatureById(id)
             emit(DataState.Success(result.toDomain()))
         } catch (e: Exception) {
             emit(DataState.Error(e.message ?: "Unknown error"))

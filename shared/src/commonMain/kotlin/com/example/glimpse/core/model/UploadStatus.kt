@@ -1,12 +1,15 @@
 package com.example.glimpse.core.model
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
 enum class UploadStatus {
-    @SerialName("pending") PENDING,
-    @SerialName("processing") PROCESSING,
-    @SerialName("done") DONE,
-    @SerialName("failed") FAILED,
+    PENDING, PROCESSING, DONE, FAILED;
+
+    companion object {
+        fun fromValue(value: String) = when (value) {
+            "pending" -> PENDING
+            "processing" -> PROCESSING
+            "done" -> DONE
+            "failed" -> FAILED
+            else -> throw IllegalArgumentException("Unknown upload status: $value")
+        }
+    }
 }
