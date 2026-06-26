@@ -1,6 +1,6 @@
 package com.example.glimpse.core.network.service
 
-import com.example.glimpse.core.model.FaceCluster
+import com.example.glimpse.core.model.Cluster
 import com.example.glimpse.core.model.ShareLink
 import com.example.glimpse.core.network.ApiEndPoints
 import io.ktor.client.*
@@ -12,16 +12,16 @@ import kotlinx.coroutines.flow.flow
 
 class ClusterApiService(private val client: HttpClient) {
 
-    fun getReceivedClusterById(id: String): Flow<FaceCluster> = flow {
+    fun getReceivedClusterById(id: String): Flow<Cluster> = flow {
         emit(client.get(ApiEndPoints.getReceivedClusterById(id)).body())
     }
 
-    fun getGeneratedCluster(): Flow<List<FaceCluster>> = flow {
+    fun getGeneratedCluster(): Flow<List<Cluster>> = flow {
         emit(client.get(ApiEndPoints.GENERATED_CLUSTER).body())
     }
 
-    suspend fun getClusters(): List<FaceCluster> {
-        return client.get(ApiEndPoints.GET_RECEIVED_CLUSTER).body<List<FaceCluster>>()
+    suspend fun getClusters(): List<Cluster> {
+        return client.get(ApiEndPoints.GET_RECEIVED_CLUSTER).body<List<Cluster>>()
     }
 
     suspend fun createLink(clusterId: String): ShareLink {

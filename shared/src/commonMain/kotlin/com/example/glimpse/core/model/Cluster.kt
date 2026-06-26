@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FaceCluster(
+data class Cluster(
     val id: String,
     val name: String?,
     @SerialName("thumbnail_url") val thumbnailUrl: String,
