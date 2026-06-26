@@ -7,7 +7,6 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
-import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -19,10 +18,6 @@ class ClusterApiService(private val client: HttpClient) {
 
     fun getGeneratedCluster(): Flow<List<FaceCluster>> = flow {
         emit(client.get(ApiEndPoints.GENERATED_CLUSTER).body())
-    }
-
-    suspend fun completeUpload(sessionId: String): HttpResponse {
-        return client.post(ApiEndPoints.uploadStatus(sessionId))
     }
 
     suspend fun getClusters(): List<FaceCluster> {

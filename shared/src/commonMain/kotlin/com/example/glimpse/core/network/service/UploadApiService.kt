@@ -1,6 +1,8 @@
 package com.example.glimpse.core.network.service
 
+import com.example.glimpse.core.model.PaginatedUploads
 import com.example.glimpse.core.model.Upload
+import com.example.glimpse.core.model.UploadStatus
 import com.example.glimpse.core.network.ApiEndPoints
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -14,8 +16,22 @@ import kotlinx.serialization.Serializable
 
 class UploadApiService(private val client: HttpClient) {
 
-    fun getAllUploads(): Flow<List<Upload>> = flow {
-        emit(client.get(ApiEndPoints.GET_ALL_UPLOADS).body())
+    fun getAllUploads(
+        page: Int? = null,
+        limit: Int? = null,
+        sort: String? = null,
+        order: String? = null,
+        search: String? = null,
+        status: UploadStatus? = null,
+    ): Flow<PaginatedUploads> = flow {
+        emit(client.get(ApiEndPoints.GET_ALL_UPLOADS) {
+            page?.let { parameter("page", it) }
+            limit?.let { parameter("limit", it) }
+            sort?.let { parameter("sort", it) }
+            order?.let { parameter("order", it) }
+            search?.let { parameter("search", it) }
+            status?.let { parameter("status", it.name.lowercase()) }
+        }.body())
     }
 
     fun getUploadById(id: String): Flow<Upload> = flow {
@@ -38,6 +54,12 @@ class UploadApiService(private val client: HttpClient) {
             setBody(UpdateUploadRequest(name, expiresAt))
         }
     }
+
+    suspend fun completeUpload(uploadId: String, keys: List<String>): HttpResponse =
+        client.post(ApiEndPoints.uploadStatus(uploadId)) {
+            contentType(ContentType.Application.Json)
+            setBody(CompleteUploadRequest(keys.map { FileKeyRequest(it) }))
+        }
 
     suspend fun getPresignedUrls(uploadId: String, fileNames: List<String>): HttpResponse =
         client.post(ApiEndPoints.getPresignedUrls(uploadId)) {
@@ -69,6 +91,12 @@ class UploadApiService(private val client: HttpClient) {
 
     @Serializable
     private data class UpdateUploadRequest(val name: String, val expiresAt: String)
+
+    @Serializable
+    private data class CompleteUploadRequest(val files: List<FileKeyRequest>)
+
+    @Serializable
+    private data class FileKeyRequest(val key: String)
 
     @Serializable
     private data class GetPresignedUrlsRequest(val files: List<FileRequest>)

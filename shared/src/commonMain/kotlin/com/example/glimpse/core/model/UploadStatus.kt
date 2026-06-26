@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 enum class UploadStatus {
     @SerialName("pending") PENDING,
     @SerialName("processing") PROCESSING,
-    @SerialName("complete") COMPLETE,
+    @SerialName("done") DONE,
     @SerialName("failed") FAILED,
 }
