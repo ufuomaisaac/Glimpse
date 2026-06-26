@@ -1,15 +1,30 @@
 package com.example.glimpse.core.network.service
 
+import com.example.glimpse.core.model.Upload
 import com.example.glimpse.core.network.ApiEndPoints
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.plugins.onUpload
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.Serializable
 
 class UploadApiService(private val client: HttpClient) {
+
+    fun getAllUploads(): Flow<List<Upload>> = flow {
+        emit(client.get(ApiEndPoints.GET_ALL_UPLOADS).body())
+    }
+
+    fun getUploadById(id: String): Flow<Upload> = flow {
+        emit(client.get(ApiEndPoints.getUploadById(id)).body())
+    }
+
+    suspend fun deleteUpload(id: String): HttpResponse =
+        client.delete(ApiEndPoints.deleteUpload(id))
 
     suspend fun createUpload(name: String, expiresAt: String): HttpResponse {
         return client.post(ApiEndPoints.CREATE_UPLOAD) {
@@ -18,10 +33,10 @@ class UploadApiService(private val client: HttpClient) {
         }
     }
 
-    suspend fun renameUpload(uploadId: String, name: String): HttpResponse {
+    suspend fun updateUpload(uploadId: String, name: String, expiresAt: String): HttpResponse {
         return client.patch(ApiEndPoints.updateUpload(uploadId)) {
             contentType(ContentType.Application.Json)
-            setBody(RenameUploadRequest(name))
+            setBody(UpdateUploadRequest(name, expiresAt))
         }
     }
 
@@ -63,5 +78,5 @@ class UploadApiService(private val client: HttpClient) {
     )
 
     @Serializable
-    private data class RenameUploadRequest(val name: String)
+    private data class UpdateUploadRequest(val name: String, val expiresAt: String)
 }

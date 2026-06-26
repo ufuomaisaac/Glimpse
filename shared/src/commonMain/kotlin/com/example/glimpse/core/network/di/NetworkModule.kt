@@ -8,7 +8,6 @@ import org.koin.dsl.module
 val networkModule = module {
     // TokenProvider is bound by the auth module — get() resolves it at runtime
     single { createHttpClient(get()) }
-
     single { UploadApiService(get()) }
     single { ClusterApiService(get()) }
 }
