@@ -1,32 +1,16 @@
 package com.example.glimpse.core.network.service
 
-import com.example.glimpse.core.network.ClerkConfig
 import com.example.glimpse.core.network.dto.auth.ClerkSignInResponseDto
 import com.example.glimpse.core.network.dto.auth.ClerkSignUpResponseDto
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
-class AuthApiService {
-
-    private val client = HttpClient {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-        defaultRequest {
-            url(ClerkConfig.FRONTEND_API_URL)
-            headers {
-                append(HttpHeaders.Authorization, "Bearer ${ClerkConfig.PUBLISHABLE_KEY}")
-            }
-        }
-    }
+class AuthApiService(private val client: HttpClient) {
 
     suspend fun signIn(email: String, password: String): ClerkSignInResponseDto =
         client.submitForm(

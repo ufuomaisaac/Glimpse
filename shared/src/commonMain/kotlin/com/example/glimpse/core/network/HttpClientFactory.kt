@@ -8,6 +8,22 @@ import io.ktor.client.plugins.BodyProgress
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
+internal fun createAuthHttpClient(): HttpClient = HttpClient {
+    install(ContentNegotiation) {
+        json(Json { ignoreUnknownKeys = true })
+    }
+    install(Logging) {
+        level = LogLevel.BODY
+        logger = Logger.DEFAULT
+    }
+    defaultRequest {
+        url(ClerkConfig.FRONTEND_API_URL)
+        headers {
+            append("Authorization", "Bearer ${ClerkConfig.PUBLISHABLE_KEY}")
+        }
+    }
+}
+
 internal fun createHttpClient(tokenProvider: TokenProvider): HttpClient {
     val client = HttpClient {
         install(ContentNegotiation) {
