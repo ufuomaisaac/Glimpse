@@ -23,6 +23,14 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
+    fun checkAuthState() {
+        viewModelScope.launch {
+            _uiState.value = AuthUiState.Loading
+            _uiState.value = if (authRepository.isSignedIn()) AuthUiState.SignedIn
+                             else AuthUiState.Idle
+        }
+    }
+
     fun signIn(email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading

@@ -11,6 +11,8 @@ class AuthRepositoryImpl(
     private val tokenStorage: TokenStorage,
 ) : AuthRepository {
 
+    override suspend fun isSignedIn(): Boolean = tokenStorage.getToken() != null
+
     override suspend fun signIn(email: String, password: String): ScreenState<Unit> = try {
         val session = authApiService.signIn(email, password).toDomain()
             ?: return ScreenState.Error("Sign in failed: no session in response")
