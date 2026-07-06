@@ -3,7 +3,7 @@ package com.example.glimpse
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
+import com.example.glimpse.designsystem.GlimpseTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +25,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun App(viewModel: AppViewModel = koinViewModel()) {
     val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
-    MaterialTheme {
+    GlimpseTheme {
         val dest = startDestination
         if (dest == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
