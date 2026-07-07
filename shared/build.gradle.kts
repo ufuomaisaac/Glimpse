@@ -76,6 +76,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.datastore.preferences)
+            implementation(libs.datastore.preferences.android)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)

@@ -9,8 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.glimpse.designsystem.GlimpseTheme
+import com.example.glimpse.designsystem.Spacing
+import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
+import com.example.glimpse.designsystem.components.GlimpseTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -37,52 +41,98 @@ fun EmailVerificationScreen(
     }
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text("Check your email", style = MaterialTheme.typography.headlineMedium)
-            Spacer(Modifier.height(8.dp))
-            Text(
-                "Enter the 6-digit code we sent you.",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Spacer(Modifier.height(32.dp))
+        EmailVerificationContent(
+            code = code,
+            onCodeChange = { if (it.length <= 6) code = it.filter(Char::isDigit) },
+            isLoading = uiState is AuthUiState.Loading,
+            onVerify = { viewModel.verifyEmail(signUpId, code) },
+            modifier = Modifier.padding(padding),
+        )
+    }
+}
 
-            OutlinedTextField(
-                value = code,
-                onValueChange = { if (it.length <= 6) code = it.filter(Char::isDigit) },
-                label = { Text("Verification code") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.NumberPassword,
-                    imeAction = ImeAction.Done,
-                ),
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Spacer(Modifier.height(24.dp))
+@Composable
+private fun EmailVerificationContent(
+    code: String,
+    onCodeChange: (String) -> Unit,
+    isLoading: Boolean,
+    onVerify: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = Spacing.dp24),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text("Check your email", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(Spacing.dp8))
+        Text(
+            "Enter the 6-digit code we sent you.",
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.height(Spacing.dp32))
 
-            Button(
-                onClick = { viewModel.verifyEmail(signUpId, code) },
-                enabled = uiState !is AuthUiState.Loading && code.length == 6,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                if (uiState is AuthUiState.Loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(18.dp),
-                        strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                    )
-                } else {
-                    Text("Verify")
-                }
-            }
-        }
+        GlimpseTextField(
+            value = code,
+            onValueChange = onCodeChange,
+            placeholder = "6-digit code",
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.NumberPassword,
+                imeAction = ImeAction.Done,
+            ),
+        )
+        Spacer(Modifier.height(Spacing.dp24))
+
+        GlimpsePrimaryButton(
+            text = "Verify",
+            onClick = onVerify,
+            isLoading = isLoading,
+            enabled = code.length == 6,
+        )
+    }
+}
+
+// ── Previews ─────────────────────────────────────────────────────────────────
+
+@Preview
+@Composable
+private fun EmailVerificationEmptyPreview() {
+    GlimpseTheme {
+        EmailVerificationContent(
+            code = "",
+            onCodeChange = {},
+            isLoading = false,
+            onVerify = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmailVerificationFilledPreview() {
+    GlimpseTheme {
+        EmailVerificationContent(
+            code = "123456",
+            onCodeChange = {},
+            isLoading = false,
+            onVerify = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmailVerificationLoadingPreview() {
+    GlimpseTheme {
+        EmailVerificationContent(
+            code = "123456",
+            onCodeChange = {},
+            isLoading = true,
+            onVerify = {},
+        )
     }
 }

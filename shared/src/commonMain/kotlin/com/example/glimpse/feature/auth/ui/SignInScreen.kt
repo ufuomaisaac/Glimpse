@@ -8,10 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.glimpse.designsystem.GlimpseTheme
+import com.example.glimpse.designsystem.Spacing
+import com.example.glimpse.designsystem.components.GlimpseAccentButton
+import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
+import com.example.glimpse.designsystem.components.GlimpseTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -107,69 +110,107 @@ private fun AuthForm(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp),
+            .padding(horizontal = Spacing.dp24),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(title, style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(32.dp))
+        Spacer(Modifier.height(Spacing.dp32))
 
-        OutlinedTextField(
+I        GlimpseTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
-            singleLine = true,
+            placeholder = "Email address",
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
             ),
-            modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Spacing.dp16))
 
-        OutlinedTextField(
+        GlimpseTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None
-                                   else PasswordVisualTransformation(),
+            placeholder = "Password",
+            isPassword = !passwordVisible,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
             ),
-            trailingIcon = {
-                TextButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Text(if (passwordVisible) "Hide" else "Show")
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
         )
-        Spacer(Modifier.height(24.dp))
-
-        Button(
-            onClick = { onSubmit(email, password) },
-            enabled = !isLoading && email.isNotBlank() && password.isNotBlank(),
+        Row(
             modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(18.dp),
-                    strokeWidth = 2.dp,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
-            } else {
-                Text(submitLabel)
-            }
+            GlimpseAccentButton(
+                text = if (passwordVisible) "Hide" else "Show",
+                onClick = { passwordVisible = !passwordVisible },
+            )
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Spacing.dp24))
+
+        GlimpsePrimaryButton(
+            text = submitLabel,
+            onClick = { onSubmit(email, password) },
+            isLoading = isLoading,
+            enabled = email.isNotBlank() && password.isNotBlank(),
+        )
+        Spacer(Modifier.height(Spacing.dp16))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(footerText, style = MaterialTheme.typography.bodyMedium)
-            Spacer(Modifier.width(4.dp))
-            TextButton(onClick = onFooterAction) {
-                Text(footerActionText)
-            }
+            Spacer(Modifier.width(Spacing.dp4))
+            GlimpseAccentButton(text = footerActionText, onClick = onFooterAction)
         }
+    }
+}
+
+// ── Previews ─────────────────────────────────────────────────────────────────
+
+@Preview
+@Composable
+private fun SignInScreenPreview() {
+    GlimpseTheme {
+        AuthForm(
+            title = "Welcome back",
+            submitLabel = "Sign in",
+            isLoading = false,
+            onSubmit = { _, _ -> },
+            footerText = "Don't have an account?",
+            footerActionText = "Sign up",
+            onFooterAction = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SignUpScreenPreview() {
+    GlimpseTheme {
+        AuthForm(
+            title = "Create account",
+            submitLabel = "Sign up",
+            isLoading = false,
+            onSubmit = { _, _ -> },
+            footerText = "Already have an account?",
+            footerActionText = "Sign in",
+            onFooterAction = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SignInLoadingPreview() {
+    GlimpseTheme {
+        AuthForm(
+            title = "Welcome back",
+            submitLabel = "Sign in",
+            isLoading = true,
+            onSubmit = { _, _ -> },
+            footerText = "Don't have an account?",
+            footerActionText = "Sign up",
+            onFooterAction = {},
+        )
     }
 }

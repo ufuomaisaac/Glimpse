@@ -37,7 +37,7 @@ private val GlimpseDarkColorScheme = darkColorScheme(
 
 @Composable
 fun GlimpseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false,
     typography: Typography = Typography(),
     content: @Composable () -> Unit,
 ) {
