@@ -1,7 +1,10 @@
 package com.example.glimpse.feature.auth.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -68,7 +71,7 @@ fun SignInScreen(
 @Composable
 fun SignUpScreen(
     onNavigateToSignIn: () -> Unit,
-    onNavigateToEmailVerification: (signUpId: String) -> Unit,
+    onNavigateToEmailVerification: (signUpId: String, email: String) -> Unit,
     onSignedIn: () -> Unit,
     viewModel: AuthViewModel = koinViewModel(),
 ) {
@@ -80,7 +83,7 @@ fun SignUpScreen(
             is AuthUiState.SignedIn -> onSignedIn()
             is AuthUiState.AwaitingEmailVerification -> {
                 viewModel.clearError()
-                onNavigateToEmailVerification(state.signUpId)
+                onNavigateToEmailVerification(state.signUpId, state.email)
             }
             is AuthUiState.Error -> {
                 snackbarHostState.showSnackbar(state.message)
@@ -118,10 +121,13 @@ private fun AuthForm(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val canSubmit = email.isNotBlank() && password.isNotBlank()
 
     Column(
         modifier = modifier
             .fillMaxSize()
+            .imePadding()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = Spacing.dp24),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,6 +155,9 @@ private fun AuthForm(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
             ),
+            keyboardActions = KeyboardActions(
+                onDone = { if (canSubmit && !isLoading) onSubmit(email, password) },
+            ),
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -168,7 +177,7 @@ private fun AuthForm(
             text = submitLabel,
             onClick = { onSubmit(email, password) },
             isLoading = isLoading,
-            enabled = email.isNotBlank() && password.isNotBlank(),
+            enabled = canSubmit,
         )
         Spacer(Modifier.height(Spacing.dp16))
 

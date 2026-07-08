@@ -1,7 +1,10 @@
 package com.example.glimpse.feature.auth.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +31,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun EmailVerificationScreen(
     signUpId: String,
+    email: String,
     onVerified: () -> Unit,
     viewModel: AuthViewModel = koinViewModel(),
 ) {
@@ -49,6 +53,7 @@ fun EmailVerificationScreen(
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         EmailVerificationContent(
             code = code,
+            email = email,
             onCodeChange = { if (it.length <= 6) code = it.filter(Char::isDigit) },
             isLoading = uiState is AuthUiState.Loading,
             onVerify = { viewModel.verifyEmail(signUpId, code) },
@@ -60,6 +65,7 @@ fun EmailVerificationScreen(
 @Composable
 private fun EmailVerificationContent(
     code: String,
+    email: String,
     onCodeChange: (String) -> Unit,
     isLoading: Boolean,
     onVerify: () -> Unit,
@@ -68,6 +74,8 @@ private fun EmailVerificationContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .imePadding()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = Spacing.dp24),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,7 +83,7 @@ private fun EmailVerificationContent(
         Text(stringResource(Res.string.verify_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(Spacing.dp8))
         Text(
-            stringResource(Res.string.verify_subtitle),
+            stringResource(Res.string.verify_subtitle, email),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -89,6 +97,9 @@ private fun EmailVerificationContent(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Done,
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { if (code.length == 6 && !isLoading) onVerify() },
             ),
         )
         Spacer(Modifier.height(Spacing.dp24))
@@ -110,6 +121,7 @@ private fun EmailVerificationEmptyPreview() {
     GlimpseTheme {
         EmailVerificationContent(
             code = "",
+            email = "user@example.com",
             onCodeChange = {},
             isLoading = false,
             onVerify = {},
@@ -123,6 +135,7 @@ private fun EmailVerificationFilledPreview() {
     GlimpseTheme {
         EmailVerificationContent(
             code = "123456",
+            email = "user@example.com",
             onCodeChange = {},
             isLoading = false,
             onVerify = {},
@@ -136,6 +149,7 @@ private fun EmailVerificationLoadingPreview() {
     GlimpseTheme {
         EmailVerificationContent(
             code = "123456",
+            email = "user@example.com",
             onCodeChange = {},
             isLoading = true,
             onVerify = {},

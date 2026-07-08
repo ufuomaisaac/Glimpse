@@ -17,7 +17,7 @@ sealed interface AuthUiState {
     data object Idle : AuthUiState
     data object Loading : AuthUiState
     data object SignedIn : AuthUiState
-    data class AwaitingEmailVerification(val signUpId: String) : AuthUiState
+    data class AwaitingEmailVerification(val signUpId: String, val email: String) : AuthUiState
     data class Error(val message: String) : AuthUiState
 }
 
@@ -52,7 +52,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                 is ScreenState.Success -> when (result.data) {
                     is SignUpOutcome.Complete -> AuthUiState.SignedIn
                     is SignUpOutcome.NeedsEmailVerification ->
-                        AuthUiState.AwaitingEmailVerification(result.data.signUpId)
+                        AuthUiState.AwaitingEmailVerification(result.data.signUpId, email)
                 }
                 is ScreenState.Error -> AuthUiState.Error(result.message)
                 else -> AuthUiState.Error(getString(Res.string.error_unexpected))

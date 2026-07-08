@@ -14,7 +14,7 @@
 
     <!-- Email verification -->
     <string name="verify_title">Check your email</string>
-    <string name="verify_subtitle">Enter the 6-digit code we sent you.</string>
+    <string name="verify_subtitle">Enter the 6-digit code we sent to %1$s.</string>
     <string name="verify_code_placeholder">6-digit code</string>
     <string name="verify_button">Verify</string>
 

@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable object AuthGraph
 @Serializable object SignIn
 @Serializable object SignUp
-@Serializable data class EmailVerification(val signUpId: String)
+@Serializable data class EmailVerification(val signUpId: String, val email: String)
 
 fun NavGraphBuilder.authGraph(
     navController: NavController,
@@ -22,15 +22,17 @@ fun NavGraphBuilder.authGraph(
     navigation<AuthGraph>(startDestination = SignIn) {
         composable<SignIn> {
             SignInScreen(
-                onNavigateToSignUp = { navController.navigate(SignUp) },
+                onNavigateToSignUp = {
+                    navController.navigate(SignUp) { launchSingleTop = true }
+                },
                 onSignedIn = onNavigateToMain,
             )
         }
         composable<SignUp> {
             SignUpScreen(
-                onNavigateToSignIn = { navController.navigate(SignIn) },
-                onNavigateToEmailVerification = { signUpId ->
-                    navController.navigate(EmailVerification(signUpId)) {
+                onNavigateToSignIn = { navController.popBackStack() },
+                onNavigateToEmailVerification = { signUpId, email ->
+                    navController.navigate(EmailVerification(signUpId, email)) {
                         popUpTo(SignUp) { inclusive = true }
                     }
                 },
@@ -41,6 +43,7 @@ fun NavGraphBuilder.authGraph(
             val route = backStackEntry.toRoute<EmailVerification>()
             EmailVerificationScreen(
                 signUpId = route.signUpId,
+                email = route.email,
                 onVerified = onNavigateToMain,
             )
         }
