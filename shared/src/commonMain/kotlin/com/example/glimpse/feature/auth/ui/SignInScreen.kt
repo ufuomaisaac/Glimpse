@@ -17,6 +17,18 @@ import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
 import com.example.glimpse.designsystem.components.GlimpseTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
+import glimpse.shared.generated.resources.Res
+import glimpse.shared.generated.resources.auth_email_placeholder
+import glimpse.shared.generated.resources.auth_have_account
+import glimpse.shared.generated.resources.auth_no_account
+import glimpse.shared.generated.resources.auth_password_hide
+import glimpse.shared.generated.resources.auth_password_placeholder
+import glimpse.shared.generated.resources.auth_password_show
+import glimpse.shared.generated.resources.auth_sign_in
+import glimpse.shared.generated.resources.auth_sign_in_title
+import glimpse.shared.generated.resources.auth_sign_up
+import glimpse.shared.generated.resources.auth_sign_up_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -41,12 +53,12 @@ fun SignInScreen(
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         AuthForm(
-            title = "Welcome back",
-            submitLabel = "Sign in",
+            title = stringResource(Res.string.auth_sign_in_title),
+            submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = uiState is AuthUiState.Loading,
             onSubmit = viewModel::signIn,
-            footerText = "Don't have an account?",
-            footerActionText = "Sign up",
+            footerText = stringResource(Res.string.auth_no_account),
+            footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = onNavigateToSignUp,
             modifier = Modifier.padding(padding),
         )
@@ -80,12 +92,12 @@ fun SignUpScreen(
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
         AuthForm(
-            title = "Create account",
-            submitLabel = "Sign up",
+            title = stringResource(Res.string.auth_sign_up_title),
+            submitLabel = stringResource(Res.string.auth_sign_up),
             isLoading = uiState is AuthUiState.Loading,
             onSubmit = viewModel::signUp,
-            footerText = "Already have an account?",
-            footerActionText = "Sign in",
+            footerText = stringResource(Res.string.auth_have_account),
+            footerActionText = stringResource(Res.string.auth_sign_in),
             onFooterAction = onNavigateToSignIn,
             modifier = Modifier.padding(padding),
         )
@@ -117,10 +129,10 @@ private fun AuthForm(
         Text(title, style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(Spacing.dp32))
 
-I        GlimpseTextField(
+        GlimpseTextField(
             value = email,
             onValueChange = { email = it },
-            placeholder = "Email address",
+            placeholder = stringResource(Res.string.auth_email_placeholder),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
@@ -131,7 +143,7 @@ I        GlimpseTextField(
         GlimpseTextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = "Password",
+            placeholder = stringResource(Res.string.auth_password_placeholder),
             isPassword = !passwordVisible,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -143,7 +155,10 @@ I        GlimpseTextField(
             horizontalArrangement = Arrangement.End,
         ) {
             GlimpseAccentButton(
-                text = if (passwordVisible) "Hide" else "Show",
+                text = stringResource(
+                    if (passwordVisible) Res.string.auth_password_hide
+                    else Res.string.auth_password_show
+                ),
                 onClick = { passwordVisible = !passwordVisible },
             )
         }
@@ -172,12 +187,12 @@ I        GlimpseTextField(
 private fun SignInScreenPreview() {
     GlimpseTheme {
         AuthForm(
-            title = "Welcome back",
-            submitLabel = "Sign in",
+            title = stringResource(Res.string.auth_sign_in_title),
+            submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = false,
             onSubmit = { _, _ -> },
-            footerText = "Don't have an account?",
-            footerActionText = "Sign up",
+            footerText = stringResource(Res.string.auth_no_account),
+            footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = {},
         )
     }
@@ -188,12 +203,12 @@ private fun SignInScreenPreview() {
 private fun SignUpScreenPreview() {
     GlimpseTheme {
         AuthForm(
-            title = "Create account",
-            submitLabel = "Sign up",
+            title = stringResource(Res.string.auth_sign_up_title),
+            submitLabel = stringResource(Res.string.auth_sign_up),
             isLoading = false,
             onSubmit = { _, _ -> },
-            footerText = "Already have an account?",
-            footerActionText = "Sign in",
+            footerText = stringResource(Res.string.auth_have_account),
+            footerActionText = stringResource(Res.string.auth_sign_in),
             onFooterAction = {},
         )
     }
@@ -204,12 +219,12 @@ private fun SignUpScreenPreview() {
 private fun SignInLoadingPreview() {
     GlimpseTheme {
         AuthForm(
-            title = "Welcome back",
-            submitLabel = "Sign in",
+            title = stringResource(Res.string.auth_sign_in_title),
+            submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = true,
             onSubmit = { _, _ -> },
-            footerText = "Don't have an account?",
-            footerActionText = "Sign up",
+            footerText = stringResource(Res.string.auth_no_account),
+            footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = {},
         )
     }

@@ -17,6 +17,12 @@ import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
 import com.example.glimpse.designsystem.components.GlimpseTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
+import glimpse.shared.generated.resources.Res
+import glimpse.shared.generated.resources.verify_button
+import glimpse.shared.generated.resources.verify_code_placeholder
+import glimpse.shared.generated.resources.verify_subtitle
+import glimpse.shared.generated.resources.verify_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -66,10 +72,10 @@ private fun EmailVerificationContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text("Check your email", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(Res.string.verify_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(Spacing.dp8))
         Text(
-            "Enter the 6-digit code we sent you.",
+            stringResource(Res.string.verify_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -79,7 +85,7 @@ private fun EmailVerificationContent(
         GlimpseTextField(
             value = code,
             onValueChange = onCodeChange,
-            placeholder = "6-digit code",
+            placeholder = stringResource(Res.string.verify_code_placeholder),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Done,
@@ -88,7 +94,7 @@ private fun EmailVerificationContent(
         Spacer(Modifier.height(Spacing.dp24))
 
         GlimpsePrimaryButton(
-            text = "Verify",
+            text = stringResource(Res.string.verify_button),
             onClick = onVerify,
             isLoading = isLoading,
             enabled = code.length == 6,

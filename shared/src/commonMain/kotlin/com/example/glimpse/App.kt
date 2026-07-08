@@ -16,7 +16,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
 import com.example.glimpse.navigation.AppViewModel
+import glimpse.shared.generated.resources.Res
+import glimpse.shared.generated.resources.signed_in
 import kotlinx.serialization.Serializable
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable object MainGraph
@@ -44,7 +47,7 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                 )
                 composable<MainGraph> {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("Signed in!")
+                        Text(stringResource(Res.string.signed_in))
                     }
                 }
             }
