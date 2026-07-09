@@ -2,6 +2,7 @@ package com.example.glimpse.designsystem
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import glimpse.shared.generated.resources.Res
@@ -34,6 +35,36 @@ fun jetBrainsMonoFontFamily() = FontFamily(
     Font(Res.font.jetbrains_mono_medium, FontWeight.Medium),
     Font(Res.font.jetbrains_mono_bold, FontWeight.Bold),
 )
+
+object GlimpseTextStyles {
+    val headingXl
+        @Composable get() = TextStyle(
+            fontFamily = erasDemiFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = GlimpseSp.sp28,
+        )
+
+    val headingMedium
+        @Composable get() = TextStyle(
+            fontFamily = erasDemiFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = GlimpseSp.sp18,
+        )
+
+    val bodyRegular
+        @Composable get() = TextStyle(
+            fontFamily = dmSansFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = GlimpseSp.sp16,
+        )
+
+    val bodySmall
+        @Composable get() = TextStyle(
+            fontFamily = dmSansFontFamily(),
+            fontWeight = FontWeight.Medium,
+            fontSize = GlimpseSp.sp14,
+        )
+}
 
 @Composable
 fun glimpseTypography(): Typography {
