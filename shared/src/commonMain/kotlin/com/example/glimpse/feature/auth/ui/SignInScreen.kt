@@ -13,20 +13,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.designsystem.Spacing
 import com.example.glimpse.designsystem.components.GlimpseAccentButton
+import com.example.glimpse.designsystem.components.GlimpseInputTextField
+import com.example.glimpse.designsystem.components.GlimpsePasswordInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
-import com.example.glimpse.designsystem.components.GlimpseTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.auth_email_placeholder
 import glimpse.shared.generated.resources.auth_have_account
 import glimpse.shared.generated.resources.auth_no_account
-import glimpse.shared.generated.resources.auth_password_hide
 import glimpse.shared.generated.resources.auth_password_placeholder
-import glimpse.shared.generated.resources.auth_password_show
 import glimpse.shared.generated.resources.auth_sign_in
 import glimpse.shared.generated.resources.auth_sign_in_title
 import glimpse.shared.generated.resources.auth_sign_up
@@ -120,7 +119,6 @@ private fun AuthForm(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
     val canSubmit = email.isNotBlank() && password.isNotBlank()
 
     Column(
@@ -128,14 +126,14 @@ private fun AuthForm(
             .fillMaxSize()
             .imePadding()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = Spacing.dp24),
+            .padding(horizontal = GlimpseDp.dp24),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(title, style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(Spacing.dp32))
+        Spacer(Modifier.height(GlimpseDp.dp32))
 
-        GlimpseTextField(
+        GlimpseInputTextField(
             value = email,
             onValueChange = { email = it },
             placeholder = stringResource(Res.string.auth_email_placeholder),
@@ -144,13 +142,12 @@ private fun AuthForm(
                 imeAction = ImeAction.Next,
             ),
         )
-        Spacer(Modifier.height(Spacing.dp16))
+        Spacer(Modifier.height(GlimpseDp.dp16))
 
-        GlimpseTextField(
+        GlimpsePasswordInputTextField(
             value = password,
             onValueChange = { password = it },
             placeholder = stringResource(Res.string.auth_password_placeholder),
-            isPassword = !passwordVisible,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done,
@@ -159,19 +156,7 @@ private fun AuthForm(
                 onDone = { if (canSubmit && !isLoading) onSubmit(email, password) },
             ),
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End,
-        ) {
-            GlimpseAccentButton(
-                text = stringResource(
-                    if (passwordVisible) Res.string.auth_password_hide
-                    else Res.string.auth_password_show
-                ),
-                onClick = { passwordVisible = !passwordVisible },
-            )
-        }
-        Spacer(Modifier.height(Spacing.dp24))
+        Spacer(Modifier.height(GlimpseDp.dp24))
 
         GlimpsePrimaryButton(
             text = submitLabel,
@@ -179,11 +164,11 @@ private fun AuthForm(
             isLoading = isLoading,
             enabled = canSubmit,
         )
-        Spacer(Modifier.height(Spacing.dp16))
+        Spacer(Modifier.height(GlimpseDp.dp16))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(footerText, style = MaterialTheme.typography.bodyMedium)
-            Spacer(Modifier.width(Spacing.dp4))
+            Spacer(Modifier.width(GlimpseDp.dp4))
             GlimpseAccentButton(text = footerActionText, onClick = onFooterAction)
         }
     }

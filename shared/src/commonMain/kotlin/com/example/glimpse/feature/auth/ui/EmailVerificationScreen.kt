@@ -14,10 +14,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.designsystem.Spacing
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
-import com.example.glimpse.designsystem.components.GlimpseTextField
+import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
@@ -76,21 +76,21 @@ private fun EmailVerificationContent(
             .fillMaxSize()
             .imePadding()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = Spacing.dp24),
+            .padding(horizontal = GlimpseDp.dp24),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(stringResource(Res.string.verify_title), style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(Spacing.dp8))
+        Spacer(Modifier.height(GlimpseDp.dp8))
         Text(
             stringResource(Res.string.verify_subtitle, email),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(Spacing.dp32))
+        Spacer(Modifier.height(GlimpseDp.dp32))
 
-        GlimpseTextField(
+        GlimpseInputTextField(
             value = code,
             onValueChange = onCodeChange,
             placeholder = stringResource(Res.string.verify_code_placeholder),
@@ -102,7 +102,7 @@ private fun EmailVerificationContent(
                 onDone = { if (code.length == 6 && !isLoading) onVerify() },
             ),
         )
-        Spacer(Modifier.height(Spacing.dp24))
+        Spacer(Modifier.height(GlimpseDp.dp24))
 
         GlimpsePrimaryButton(
             text = stringResource(Res.string.verify_button),

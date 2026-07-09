@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import com.example.glimpse.designsystem.GlimpseTheme
-import androidx.compose.material3.Text
+import com.example.glimpse.feature.auth.ui.GlimpseGradientScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -16,10 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
 import com.example.glimpse.navigation.AppViewModel
-import glimpse.shared.generated.resources.Res
-import glimpse.shared.generated.resources.signed_in
 import kotlinx.serialization.Serializable
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Serializable object MainGraph
@@ -46,9 +43,7 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                     }
                 )
                 composable<MainGraph> {
-                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(stringResource(Res.string.signed_in))
-                    }
+                    GlimpseGradientScreen()
                 }
             }
         }

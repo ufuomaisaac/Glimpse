@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,15 +22,11 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.BorderLight
-import com.example.glimpse.designsystem.BorderWidth
-import com.example.glimpse.designsystem.Elevation
+import com.example.glimpse.designsystem.GlimpseDp
+import com.example.glimpse.designsystem.GlimpseSp
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.designsystem.Radius
-import com.example.glimpse.designsystem.Spacing
 import com.example.glimpse.designsystem.Surface
 import com.example.glimpse.designsystem.TextPrimary
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,7 +39,7 @@ fun GlimpsePrimaryButton(
     isLoading: Boolean = false,
     enabled: Boolean = true,
 ) {
-    val shape = RoundedCornerShape(Radius.dp28)
+    val shape = RoundedCornerShape(GlimpseDp.dp28)
 
     Button(
         onClick = onClick,
@@ -56,21 +51,21 @@ fun GlimpsePrimaryButton(
             disabledContainerColor = AccentPrimary.copy(alpha = 0.5f),
             disabledContentColor = Surface.copy(alpha = 0.7f),
         ),
-        contentPadding = PaddingValues(horizontal = 28.dp, vertical = Spacing.dp16),
+        contentPadding = PaddingValues(horizontal = GlimpseDp.dp28, vertical = GlimpseDp.dp16),
         modifier = modifier
             .shadow(
-                elevation = Elevation.dp8,
+                elevation = GlimpseDp.dp8,
                 shape = shape,
                 spotColor = AccentPrimary.copy(alpha = 0.25f),
                 ambientColor = AccentPrimary.copy(alpha = 0.10f),
             )
             .fillMaxWidth()
-            .height(54.dp),
+            .height(GlimpseDp.dp54),
     ) {
             Text(
                 text = text,
                 fontWeight = FontWeight.Medium,
-                fontSize = 14.sp,
+                fontSize = GlimpseSp.sp14,
             )
     }
 }
@@ -80,25 +75,23 @@ fun GlimpseSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
-        enabled = enabled,
-        shape = RoundedCornerShape(Radius.dp28),
-        border = BorderStroke(BorderWidth.dp1, BorderLight),
+        shape = RoundedCornerShape(GlimpseDp.dp28),
+        border = BorderStroke(GlimpseDp.dp2, BorderLight),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = Surface,
             contentColor = TextPrimary,
         ),
         modifier = modifier
-            .width(311.dp)
-            .height(56.dp),
+            .fillMaxWidth()
+            .height(GlimpseDp.dp56),
     ) {
         Text(
             text = text,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp,
+            fontSize = GlimpseSp.sp14,
         )
     }
 }
@@ -113,7 +106,7 @@ fun GlimpseAccentButton(
         text = text,
         color = AccentPrimary,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
+        fontSize = GlimpseSp.sp14,
         modifier = modifier
             .semantics { role = Role.Button }
             .clickable(onClick = onClick),
@@ -127,12 +120,12 @@ fun GlimpseAccentButton(
 private fun PrimaryButtonPreview() {
     GlimpseTheme {
         Column(
-            modifier = Modifier.fillMaxSize().padding(Spacing.dp24),
-            verticalArrangement = Arrangement.spacedBy(Spacing.dp16),
+            modifier = Modifier.fillMaxSize().padding(GlimpseDp.dp24),
+            verticalArrangement = Arrangement.spacedBy(GlimpseDp.dp16),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             GlimpsePrimaryButton(text = "Sign in", onClick = {})
-            GlimpsePrimaryButton(text = "Disabled", onClick = {}, enabled = false)
+            GlimpsePrimaryButton(text = "Disabled", onClick = {})
         }
     }
 }
@@ -142,12 +135,11 @@ private fun PrimaryButtonPreview() {
 private fun SecondaryButtonPreview() {
     GlimpseTheme {
         Column(
-            modifier = Modifier.fillMaxSize().padding(Spacing.dp24),
-            verticalArrangement = Arrangement.spacedBy(Spacing.dp16),
+            modifier = Modifier.fillMaxSize().padding(GlimpseDp.dp24),
+            verticalArrangement = Arrangement.spacedBy(GlimpseDp.dp16),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             GlimpseSecondaryButton(text = "Continue with Google", onClick = {})
-            GlimpseSecondaryButton(text = "Disabled", onClick = {}, enabled = false)
         }
     }
 }
@@ -157,7 +149,7 @@ private fun SecondaryButtonPreview() {
 private fun AccentButtonPreview() {
     GlimpseTheme {
         Column(
-            modifier = Modifier.padding(Spacing.dp32),
+            modifier = Modifier.padding(GlimpseDp.dp32),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
