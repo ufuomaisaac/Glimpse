@@ -125,7 +125,6 @@ private fun PrimaryButtonPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             GlimpsePrimaryButton(text = "Sign in", onClick = {})
-            GlimpsePrimaryButton(text = "Disabled", onClick = {})
         }
     }
 }

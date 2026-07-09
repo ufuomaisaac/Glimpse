@@ -44,6 +44,13 @@ object GlimpseTextStyles {
             fontSize = GlimpseSp.sp28,
         )
 
+    val headingLarge
+        @Composable get() = TextStyle(
+            fontFamily = erasDemiFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = GlimpseSp.sp22,
+        )
+
     val headingMedium
         @Composable get() = TextStyle(
             fontFamily = erasDemiFontFamily(),
@@ -63,6 +70,13 @@ object GlimpseTextStyles {
             fontFamily = dmSansFontFamily(),
             fontWeight = FontWeight.Medium,
             fontSize = GlimpseSp.sp14,
+        )
+
+    val labelMono
+        @Composable get() = TextStyle(
+            fontFamily = jetBrainsMonoFontFamily(),
+            fontWeight = FontWeight.Medium,
+            fontSize = GlimpseSp.sp11,
         )
 }
 
