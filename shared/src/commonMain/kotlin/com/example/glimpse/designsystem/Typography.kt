@@ -3,34 +3,29 @@ package com.example.glimpse.designsystem
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import glimpse.shared.generated.resources.Res
-import glimpse.shared.generated.resources.dm_sans_bold
-import glimpse.shared.generated.resources.dm_sans_bold_italic
-import glimpse.shared.generated.resources.dm_sans_italic
-import glimpse.shared.generated.resources.dm_sans_medium
-import glimpse.shared.generated.resources.dm_sans_medium_italic
 import glimpse.shared.generated.resources.dm_sans_regular
 import glimpse.shared.generated.resources.eras_demi_itc
 import glimpse.shared.generated.resources.jetbrains_mono_bold
 import glimpse.shared.generated.resources.jetbrains_mono_medium
 import glimpse.shared.generated.resources.jetbrains_mono_regular
+import glimpse.shared.generated.resources.manrope_regular
 import org.jetbrains.compose.resources.Font
 
 @Composable
 fun erasDemiFontFamily() = FontFamily(
-    Font(Res.font.eras_demi_itc, FontWeight.SemiBold),
+    Font(Res.font.eras_demi_itc, FontWeight.Normal),
 )
 
 @Composable
 fun dmSansFontFamily() = FontFamily(
     Font(Res.font.dm_sans_regular, FontWeight.Normal),
-    Font(Res.font.dm_sans_italic, FontWeight.Normal, FontStyle.Italic),
-    Font(Res.font.dm_sans_medium, FontWeight.Medium),
-    Font(Res.font.dm_sans_medium_italic, FontWeight.Medium, FontStyle.Italic),
-    Font(Res.font.dm_sans_bold, FontWeight.Bold),
-    Font(Res.font.dm_sans_bold_italic, FontWeight.Bold, FontStyle.Italic),
+)
+
+@Composable
+fun manropeFontFamily() = FontFamily(
+    Font(Res.font.manrope_regular, FontWeight.Normal),
 )
 
 @Composable
@@ -44,6 +39,9 @@ fun jetBrainsMonoFontFamily() = FontFamily(
 fun glimpseTypography(): Typography {
     val erasDemi = erasDemiFontFamily()
     val dmSans = dmSansFontFamily()
+    val jetBrainsMono = jetBrainsMonoFontFamily()
+    val manrope = manropeFontFamily()
+
     val base = Typography()
     return Typography(
         displayLarge = base.displayLarge.copy(fontFamily = erasDemi, fontWeight = FontWeight.SemiBold),

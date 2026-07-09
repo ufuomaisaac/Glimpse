@@ -115,7 +115,7 @@ private fun EmailVerificationContent(
 
 // ── Previews ─────────────────────────────────────────────────────────────────
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun EmailVerificationEmptyPreview() {
     GlimpseTheme {
@@ -129,7 +129,7 @@ private fun EmailVerificationEmptyPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun EmailVerificationFilledPreview() {
     GlimpseTheme {
@@ -143,7 +143,7 @@ private fun EmailVerificationFilledPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun EmailVerificationLoadingPreview() {
     GlimpseTheme {

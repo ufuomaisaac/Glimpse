@@ -2,6 +2,7 @@ package com.example.glimpse.designsystem
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface as MaterialSurface
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -44,6 +45,9 @@ fun GlimpseTheme(
     MaterialTheme(
         colorScheme = if (darkTheme) GlimpseDarkColorScheme else GlimpseLightColorScheme,
         typography = typography,
-        content = content,
-    )
+    ) {
+        MaterialSurface(color = MaterialTheme.colorScheme.background) {
+            content()
+        }
+    }
 }

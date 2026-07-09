@@ -95,7 +95,7 @@ fun GlimpseTextField(
 
 // ── Previews ─────────────────────────────────────────────────────────────────
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun TextFieldPreview() {
     GlimpseTheme {

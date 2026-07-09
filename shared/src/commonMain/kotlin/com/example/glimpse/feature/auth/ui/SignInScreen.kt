@@ -191,7 +191,7 @@ private fun AuthForm(
 
 // ── Previews ─────────────────────────────────────────────────────────────────
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SignInScreenPreview() {
     GlimpseTheme {
@@ -207,7 +207,7 @@ private fun SignInScreenPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SignUpScreenPreview() {
     GlimpseTheme {
@@ -223,7 +223,7 @@ private fun SignUpScreenPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SignInLoadingPreview() {
     GlimpseTheme {

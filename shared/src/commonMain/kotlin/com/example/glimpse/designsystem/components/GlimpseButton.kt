@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -65,22 +64,14 @@ fun GlimpsePrimaryButton(
                 spotColor = AccentPrimary.copy(alpha = 0.25f),
                 ambientColor = AccentPrimary.copy(alpha = 0.10f),
             )
-            .width(206.dp)
+            .fillMaxWidth()
             .height(54.dp),
     ) {
-        if (isLoading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(18.dp),
-                strokeWidth = BorderWidth.dp2,
-                color = Surface,
-            )
-        } else {
             Text(
                 text = text,
                 fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
             )
-        }
     }
 }
 
@@ -131,7 +122,7 @@ fun GlimpseAccentButton(
 
 // ── Previews ─────────────────────────────────────────────────────────────────
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun PrimaryButtonPreview() {
     GlimpseTheme {
@@ -141,13 +132,12 @@ private fun PrimaryButtonPreview() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             GlimpsePrimaryButton(text = "Sign in", onClick = {})
-            GlimpsePrimaryButton(text = "Loading", onClick = {}, isLoading = true)
             GlimpsePrimaryButton(text = "Disabled", onClick = {}, enabled = false)
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun SecondaryButtonPreview() {
     GlimpseTheme {
@@ -162,12 +152,12 @@ private fun SecondaryButtonPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun AccentButtonPreview() {
     GlimpseTheme {
         Column(
-            modifier = Modifier.fillMaxSize().padding(Spacing.dp24),
+            modifier = Modifier.padding(Spacing.dp32),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
