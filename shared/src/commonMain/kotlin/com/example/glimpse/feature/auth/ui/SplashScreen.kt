@@ -20,7 +20,7 @@ import com.example.glimpse.designsystem.GlimpseTheme
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun GlimpseGradientScreen(
+fun SplashScreen(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
@@ -47,8 +47,8 @@ fun GlimpseGradientScreen(
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 800)
 @Composable
-private fun GlimpseGradientScreenPreview() {
+private fun SplashScreenPreview() {
     GlimpseTheme {
-        GlimpseGradientScreen()
+        SplashScreen()
     }
 }

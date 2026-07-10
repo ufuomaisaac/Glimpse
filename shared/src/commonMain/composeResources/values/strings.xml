@@ -22,6 +22,12 @@
     <string name="error_unexpected">Unexpected error</string>
     <string name="signed_in">Signed in!</string>
 
+    <!-- Get stated -->
+    <string name="get_stated_title">Your private photo space</string>
+    <string name="get_stated_subtitle">Upload, organize, and share important moments from one calm, secure place.</string>
+    <string name="get_stated_button">Get started</string>
+    <string name="get_stated_have_account">I already have an account</string>
+
     <!-- Auth errors -->
     <string name="error_sign_in_failed">Sign in failed</string>
     <string name="error_sign_in_no_session">Sign in failed: no session in response</string>

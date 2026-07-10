@@ -1,14 +1,9 @@
 package com.example.glimpse
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.CircularProgressIndicator
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.feature.auth.ui.GlimpseGradientScreen
+import com.example.glimpse.feature.auth.ui.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,9 +23,7 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
     GlimpseTheme {
         val dest = startDestination
         if (dest == null) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
+            SplashScreen()
         } else {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = dest) {
@@ -43,7 +36,7 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                     }
                 )
                 composable<MainGraph> {
-                    GlimpseGradientScreen()
+                    SplashScreen()
                 }
             }
         }
