@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.GlimpseDp
+import com.example.glimpse.designsystem.GlimpseDp.dp16
 import com.example.glimpse.designsystem.GlimpseDp.dp32
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
@@ -73,7 +74,7 @@ fun GetStatedScreen(
             onClick = onGetStarted,
         )
 
-        Spacer(Modifier.height(GlimpseDp.dp32))
+        Spacer(Modifier.height(dp16))
 
         GlimpseSecondaryButton(
             modifier = Modifier.padding(horizontal = dp32),

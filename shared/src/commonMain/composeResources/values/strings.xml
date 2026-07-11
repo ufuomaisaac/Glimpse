@@ -5,7 +5,7 @@
     <string name="auth_sign_in">Sign in</string>
     <string name="auth_sign_up_title">Create account</string>
     <string name="auth_sign_up">Sign up</string>
-    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_no_account">Don't have an account?</string>
     <string name="auth_have_account">Already have an account?</string>
     <string name="auth_email_placeholder">Email address</string>
     <string name="auth_username_placeholder">Username</string>
