@@ -45,3 +45,16 @@ data class ClerkSignUpResponseDto(
     val response: ClerkSignUpAttemptDto,
     val client: ClerkClientDto,
 )
+
+
+@Serializable
+data class ClerkErrorDto(
+    val code: String? = null,
+    val message: String? = null,
+    @SerialName("long_message") val longMessage: String? = null,
+)
+
+@Serializable
+data class ClerkErrorResponseDto(
+    val errors: List<ClerkErrorDto> = emptyList(),
+)

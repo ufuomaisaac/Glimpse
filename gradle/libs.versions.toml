@@ -1,4 +1,5 @@
 [versions]
+clerk-android = "1.0.35"
 agp = "9.0.1"
 android-compileSdk = "36"
 android-minSdk = "24"
@@ -23,6 +24,7 @@ material3 = "1.11.0-alpha07"
 navigation-compose = "2.9.2"
 
 [libraries]
+clerk-android-api = { module = "com.clerk:clerk-android-api", version.ref = "clerk-android" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-testJunit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { module = "junit:junit", version.ref = "junit" }

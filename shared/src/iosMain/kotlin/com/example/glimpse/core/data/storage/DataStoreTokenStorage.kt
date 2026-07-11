@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.example.glimpse.core.network.TokenProvider
+import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import okio.Path.Companion.toPath
@@ -15,6 +16,7 @@ import platform.Foundation.NSUserDomainMask
 
 private val TOKEN_KEY = stringPreferencesKey("session_token")
 
+@OptIn(ExperimentalForeignApi::class)
 private fun createDataStore(): DataStore<Preferences> {
     val docDir = NSFileManager.defaultManager.URLForDirectory(
         directory = NSDocumentDirectory,
@@ -24,7 +26,7 @@ private fun createDataStore(): DataStore<Preferences> {
         error = null,
     )!!.path!!
     return PreferenceDataStoreFactory.createWithPath(
-        producePath = { "$docDir/auth.preferences_pb".toPath() }
+        produceFile = { "$docDir/auth.preferences_pb".toPath() }
     )
 }
 
