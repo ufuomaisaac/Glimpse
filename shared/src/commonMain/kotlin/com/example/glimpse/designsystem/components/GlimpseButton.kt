@@ -21,7 +21,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.BorderLight
 import com.example.glimpse.designsystem.GlimpseDp
@@ -75,9 +78,11 @@ fun GlimpseSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(GlimpseDp.dp28),
         border = BorderStroke(GlimpseDp.dp2, BorderLight),
         colors = ButtonDefaults.outlinedButtonColors(
@@ -90,6 +95,41 @@ fun GlimpseSecondaryButton(
     ) {
         Text(
             text = text,
+            fontWeight = FontWeight.Medium,
+            fontSize = GlimpseSp.sp14,
+        )
+    }
+}
+
+@Composable
+fun GlimpseGoogleButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    OutlinedButton(
+        onClick = onClick,
+        enabled = enabled,
+        shape = RoundedCornerShape(GlimpseDp.dp28),
+        border = BorderStroke(GlimpseDp.dp2, BorderLight),
+        colors = ButtonDefaults.outlinedButtonColors(
+            containerColor = Surface,
+            contentColor = TextPrimary,
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(GlimpseDp.dp56),
+    ) {
+        Text(
+            text = buildAnnotatedString {
+                append("Continue with ")
+                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF4285F4))) { append("G") }
+                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFDB4437))) { append("o") }
+                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFF4B400))) { append("o") }
+                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF4285F4))) { append("g") }
+                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF0F9D58))) { append("l") }
+                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFDB4437))) { append("e") }
+            },
             fontWeight = FontWeight.Medium,
             fontSize = GlimpseSp.sp14,
         )

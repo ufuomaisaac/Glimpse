@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.designsystem.components.GlimpseAccentButton
+import com.example.glimpse.designsystem.components.GlimpseGoogleButton
 import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePasswordInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
@@ -62,6 +63,8 @@ fun SignInScreen(
             submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = uiState is AuthUiState.Loading,
             onSubmit = { email, password, _ -> viewModel.signIn(email, password) },
+            showGoogleSignIn = true,
+            onGoogleSignIn = viewModel::continueWithGoogle,
             footerText = stringResource(Res.string.auth_no_account),
             footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = onNavigateToSignUp,
@@ -102,6 +105,8 @@ fun SignUpScreen(
             isLoading = uiState is AuthUiState.Loading,
             showUsername = true,
             onSubmit = viewModel::signUp,
+            showGoogleSignIn = true,
+            onGoogleSignIn = viewModel::continueWithGoogle,
             footerText = stringResource(Res.string.auth_have_account),
             footerActionText = stringResource(Res.string.auth_sign_in),
             onFooterAction = onNavigateToSignIn,
@@ -117,6 +122,8 @@ private fun AuthForm(
     isLoading: Boolean,
     showUsername: Boolean = false,
     onSubmit: (email: String, password: String, username: String) -> Unit,
+    showGoogleSignIn: Boolean = false,
+    onGoogleSignIn: () -> Unit = {},
     footerText: String,
     footerActionText: String,
     onFooterAction: () -> Unit,
@@ -214,6 +221,14 @@ private fun AuthForm(
             isLoading = isLoading,
             enabled = canSubmit,
         )
+
+        if (showGoogleSignIn) {
+            Spacer(Modifier.height(GlimpseDp.dp12))
+            GlimpseGoogleButton(
+                onClick = onGoogleSignIn,
+                enabled = !isLoading,
+            )
+        }
         Spacer(Modifier.height(GlimpseDp.dp16))
 
         Row(verticalAlignment = Alignment.CenterVertically) {

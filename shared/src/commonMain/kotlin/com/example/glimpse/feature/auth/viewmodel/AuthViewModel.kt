@@ -45,6 +45,17 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
+    fun continueWithGoogle() {
+        viewModelScope.launch {
+            _uiState.value = AuthUiState.Loading
+            _uiState.value = when (val result = authRepository.continueWithGoogle()) {
+                is ScreenState.Success -> AuthUiState.SignedIn
+                is ScreenState.Error -> AuthUiState.Error(result.message)
+                else -> AuthUiState.Error(getString(Res.string.error_unexpected))
+            }
+        }
+    }
+
     fun signUp(email: String, password: String, username: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
