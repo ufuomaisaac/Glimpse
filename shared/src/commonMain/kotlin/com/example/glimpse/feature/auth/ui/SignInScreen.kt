@@ -22,14 +22,17 @@ import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
+import glimpse.shared.generated.resources.auth_confirm_password_placeholder
 import glimpse.shared.generated.resources.auth_email_placeholder
 import glimpse.shared.generated.resources.auth_have_account
 import glimpse.shared.generated.resources.auth_no_account
+import glimpse.shared.generated.resources.auth_password_mismatch
 import glimpse.shared.generated.resources.auth_password_placeholder
 import glimpse.shared.generated.resources.auth_sign_in
 import glimpse.shared.generated.resources.auth_sign_in_title
 import glimpse.shared.generated.resources.auth_sign_up
 import glimpse.shared.generated.resources.auth_sign_up_title
+import glimpse.shared.generated.resources.auth_username_placeholder
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -58,7 +61,7 @@ fun SignInScreen(
             title = stringResource(Res.string.auth_sign_in_title),
             submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = uiState is AuthUiState.Loading,
-            onSubmit = viewModel::signIn,
+            onSubmit = { email, password, _ -> viewModel.signIn(email, password) },
             footerText = stringResource(Res.string.auth_no_account),
             footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = onNavigateToSignUp,
@@ -97,6 +100,7 @@ fun SignUpScreen(
             title = stringResource(Res.string.auth_sign_up_title),
             submitLabel = stringResource(Res.string.auth_sign_up),
             isLoading = uiState is AuthUiState.Loading,
+            showUsername = true,
             onSubmit = viewModel::signUp,
             footerText = stringResource(Res.string.auth_have_account),
             footerActionText = stringResource(Res.string.auth_sign_in),
@@ -111,15 +115,23 @@ private fun AuthForm(
     title: String,
     submitLabel: String,
     isLoading: Boolean,
-    onSubmit: (email: String, password: String) -> Unit,
+    showUsername: Boolean = false,
+    onSubmit: (email: String, password: String, username: String) -> Unit,
     footerText: String,
     footerActionText: String,
     onFooterAction: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val canSubmit = email.isNotBlank() && password.isNotBlank()
+    var confirmPassword by remember { mutableStateOf("") }
+    val passwordsMatch = !showUsername || confirmPassword.isBlank() || password == confirmPassword
+    val canSubmit = email.isNotBlank() &&
+        password.isNotBlank() &&
+        (!showUsername || username.isNotBlank()) &&
+        (!showUsername || confirmPassword.isNotBlank()) &&
+        (!showUsername || password == confirmPassword)
 
     Column(
         modifier = modifier
@@ -144,23 +156,61 @@ private fun AuthForm(
         )
         Spacer(Modifier.height(GlimpseDp.dp16))
 
+        if (showUsername) {
+            GlimpseInputTextField(
+                value = username,
+                onValueChange = { username = it },
+                placeholder = stringResource(Res.string.auth_username_placeholder),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                ),
+            )
+            Spacer(Modifier.height(GlimpseDp.dp16))
+        }
+
         GlimpsePasswordInputTextField(
             value = password,
             onValueChange = { password = it },
             placeholder = stringResource(Res.string.auth_password_placeholder),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
+                imeAction = if (showUsername) ImeAction.Next else ImeAction.Done,
             ),
             keyboardActions = KeyboardActions(
-                onDone = { if (canSubmit && !isLoading) onSubmit(email, password) },
+                onDone = { if (canSubmit && !isLoading) onSubmit(email, password, username) },
             ),
         )
+
+        if (showUsername) {
+            Spacer(Modifier.height(GlimpseDp.dp16))
+            GlimpsePasswordInputTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                placeholder = stringResource(Res.string.auth_confirm_password_placeholder),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done,
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = { if (canSubmit && !isLoading) onSubmit(email, password, username) },
+                ),
+            )
+            if (!passwordsMatch) {
+                Spacer(Modifier.height(GlimpseDp.dp8))
+                Text(
+                    text = stringResource(Res.string.auth_password_mismatch),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
         Spacer(Modifier.height(GlimpseDp.dp24))
 
         GlimpsePrimaryButton(
             text = submitLabel,
-            onClick = { onSubmit(email, password) },
+            onClick = { onSubmit(email, password, username) },
             isLoading = isLoading,
             enabled = canSubmit,
         )
@@ -184,7 +234,7 @@ private fun SignInScreenPreview() {
             title = stringResource(Res.string.auth_sign_in_title),
             submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = false,
-            onSubmit = { _, _ -> },
+            onSubmit = { _, _, _ -> },
             footerText = stringResource(Res.string.auth_no_account),
             footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = {},
@@ -200,7 +250,8 @@ private fun SignUpScreenPreview() {
             title = stringResource(Res.string.auth_sign_up_title),
             submitLabel = stringResource(Res.string.auth_sign_up),
             isLoading = false,
-            onSubmit = { _, _ -> },
+            showUsername = true,
+            onSubmit = { _, _, _ -> },
             footerText = stringResource(Res.string.auth_have_account),
             footerActionText = stringResource(Res.string.auth_sign_in),
             onFooterAction = {},
@@ -216,7 +267,7 @@ private fun SignInLoadingPreview() {
             title = stringResource(Res.string.auth_sign_in_title),
             submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = true,
-            onSubmit = { _, _ -> },
+            onSubmit = { _, _, _ -> },
             footerText = stringResource(Res.string.auth_no_account),
             footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = {},

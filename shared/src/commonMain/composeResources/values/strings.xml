@@ -8,7 +8,10 @@
     <string name="auth_no_account">Don\'t have an account?</string>
     <string name="auth_have_account">Already have an account?</string>
     <string name="auth_email_placeholder">Email address</string>
+    <string name="auth_username_placeholder">Username</string>
     <string name="auth_password_placeholder">Password</string>
+    <string name="auth_confirm_password_placeholder">Confirm password</string>
+    <string name="auth_password_mismatch">Passwords must match</string>
     <string name="auth_password_show">Show</string>
     <string name="auth_password_hide">Hide</string>
 

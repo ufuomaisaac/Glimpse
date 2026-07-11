@@ -22,12 +22,13 @@ class AuthApiService(private val client: HttpClient) {
             }
         ).body()
 
-    suspend fun signUp(email: String, password: String): ClerkSignUpResponseDto =
+    suspend fun signUp(email: String, password: String, username: String): ClerkSignUpResponseDto =
         client.submitForm(
             url = "/v1/client/sign_ups",
             formParameters = parameters {
                 append("email_address", email)
                 append("password", password)
+                append("username", username)
             }
         ).body()
 

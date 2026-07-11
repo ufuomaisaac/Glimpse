@@ -1,21 +1,23 @@
 package com.example.glimpse.core.data
 
+import android.util.Log
 import com.clerk.api.Clerk
 import com.clerk.api.auth.types.VerificationType
 import com.clerk.api.network.model.error.ClerkErrorResponse
 import com.clerk.api.network.serialization.ClerkResult
 import com.clerk.api.network.serialization.errorMessage
 import com.clerk.api.signup.SignUp
-import com.clerk.api.signup.sendCode
+import com.clerk.api.signup.sendEmailCode
 import com.clerk.api.signup.verifyCode
 import com.example.glimpse.core.common.ScreenState
 import com.example.glimpse.core.data.storage.TokenStorage
 import com.example.glimpse.core.model.SignUpOutcome
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.error_sign_in_no_session
+import glimpse.shared.generated.resources.error_sign_up_no_session
 import glimpse.shared.generated.resources.error_sign_up_status
 import glimpse.shared.generated.resources.error_verification_no_session
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import org.jetbrains.compose.resources.getString
 
@@ -24,12 +26,12 @@ class ClerkAndroidAuthRepository(
 ) : AuthRepository {
 
     override suspend fun isSignedIn(): Boolean {
-        awaitClerkInitialized()
-        return Clerk.isSignedIn || tokenStorage.getToken() != null
+        val initializationError = ensureClerkReady()
+        return initializationError == null && Clerk.isSignedIn || tokenStorage.getToken() != null
     }
 
     override suspend fun signIn(email: String, password: String): ScreenState<Unit> {
-        awaitClerkInitialized()
+        ensureClerkReady()?.let { return ScreenState.Error(it) }
         return when (val result = Clerk.auth.signInWithPassword {
             identifier = email
             this.password = password
@@ -39,31 +41,45 @@ class ClerkAndroidAuthRepository(
         }
     }
 
-    override suspend fun signUp(email: String, password: String): ScreenState<SignUpOutcome> {
-        awaitClerkInitialized()
+    override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> {
+        ensureClerkReady()?.let { return ScreenState.Error(it) }
         return when (val result = Clerk.auth.signUp {
             this.email = email
             this.password = password
+            this.username = username
         }) {
-            is ClerkResult.Success -> handleSignUpResult(result.value, email)
-            is ClerkResult.Failure -> ScreenState.Error(result.authErrorMessage)
+            is ClerkResult.Success -> {
+                Log.d(TAG, "signUp success: id=${result.value.id}, status=${result.value.status}, unverified=${result.value.unverifiedFields}, missing=${result.value.missingFields}, createdSessionId=${result.value.createdSessionId}")
+                handleSignUpResult(result.value, email)
+            }
+            is ClerkResult.Failure -> {
+                Log.e(TAG, "signUp failure: ${result.authErrorMessage}", result.throwable)
+                ScreenState.Error(result.authErrorMessage)
+            }
         }
     }
 
     override suspend fun verifyEmail(signUpId: String, code: String): ScreenState<Unit> {
-        awaitClerkInitialized()
+        ensureClerkReady()?.let { return ScreenState.Error(it) }
         val signUp = Clerk.auth.currentSignUp
             ?: return ScreenState.Error(getString(Res.string.error_verification_no_session))
 
         return when (val result = signUp.verifyCode(code, VerificationType.EMAIL)) {
-            is ClerkResult.Success -> saveCurrentToken()
-            is ClerkResult.Failure -> ScreenState.Error(result.authErrorMessage)
+            is ClerkResult.Success -> {
+                Log.d(TAG, "verifyEmail success: id=${result.value.id}, status=${result.value.status}, createdUserId=${result.value.createdUserId}, createdSessionId=${result.value.createdSessionId}")
+                completeSignUp(result.value)
+            }
+            is ClerkResult.Failure -> {
+                Log.e(TAG, "verifyEmail failure: ${result.authErrorMessage}", result.throwable)
+                ScreenState.Error(result.authErrorMessage)
+            }
         }
     }
 
     override suspend fun signOut(): ScreenState<Unit> {
-        awaitClerkInitialized()
-        Clerk.auth.signOut()
+        if (ensureClerkReady() == null) {
+            Clerk.auth.signOut()
+        }
         tokenStorage.clearToken()
         return ScreenState.Success(Unit)
     }
@@ -82,13 +98,42 @@ class ClerkAndroidAuthRepository(
     private suspend fun sendEmailVerificationCode(
         signUp: SignUp,
         email: String,
-    ): ScreenState<SignUpOutcome> = when (val result = signUp.sendCode { this.email = email }) {
-        is ClerkResult.Success -> ScreenState.Success(SignUpOutcome.NeedsEmailVerification(signUp.id))
-        is ClerkResult.Failure -> ScreenState.Error(result.authErrorMessage)
+    ): ScreenState<SignUpOutcome> = when (val result = signUp.sendEmailCode()) {
+        is ClerkResult.Success -> {
+            Log.d(TAG, "sendEmailCode success: id=${result.value.id}, status=${result.value.status}, unverified=${result.value.unverifiedFields}")
+            ScreenState.Success(SignUpOutcome.NeedsEmailVerification(result.value.id))
+        }
+        is ClerkResult.Failure -> {
+            Log.e(TAG, "sendEmailCode failure: ${result.authErrorMessage}", result.throwable)
+            ScreenState.Error(result.authErrorMessage)
+        }
+    }
+
+    private suspend fun completeSignUp(signUp: SignUp): ScreenState<Unit> {
+        if (signUp.status != SignUp.Status.COMPLETE) {
+            return ScreenState.Error(
+                getString(Res.string.error_sign_up_status, signUp.status.name.lowercase())
+            )
+        }
+
+        val sessionId = signUp.createdSessionId
+            ?: return ScreenState.Error(getString(Res.string.error_sign_up_no_session))
+
+        return when (val activeResult = Clerk.auth.setActive(sessionId)) {
+            is ClerkResult.Success -> {
+                Log.d(TAG, "setActive success: sessionId=$sessionId")
+                saveCurrentToken()
+            }
+            is ClerkResult.Failure -> {
+                Log.e(TAG, "setActive failure: ${activeResult.authErrorMessage}", activeResult.throwable)
+                ScreenState.Error(activeResult.authErrorMessage)
+            }
+        }
     }
 
     private suspend fun saveCurrentToken(): ScreenState<Unit> = when (val tokenResult = Clerk.auth.getToken()) {
         is ClerkResult.Success -> {
+            Log.d(TAG, "token fetch success")
             tokenStorage.saveToken(tokenResult.value)
             ScreenState.Success(Unit)
         }
@@ -98,8 +143,14 @@ class ClerkAndroidAuthRepository(
         )
     }
 
-    private suspend fun awaitClerkInitialized() {
-        Clerk.isInitialized.filter { it }.first()
+    private suspend fun ensureClerkReady(): String? {
+        val (_, initializationError) = combine(
+            Clerk.isInitialized,
+            Clerk.initializationError,
+        ) { isInitialized, error -> isInitialized to error }
+            .first { (isInitialized, error) -> isInitialized || error != null }
+
+        return initializationError?.message
     }
 
     private inline fun <T, R> ScreenState<T>.mapSuccess(transform: (T) -> R): ScreenState<R> =
@@ -112,3 +163,5 @@ class ClerkAndroidAuthRepository(
 
 private val ClerkResult.Failure<ClerkErrorResponse>.authErrorMessage: String
     get() = throwable?.message ?: errorMessage
+
+private const val TAG = "GlimpseAuth"

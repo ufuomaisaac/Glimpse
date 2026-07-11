@@ -18,7 +18,7 @@ private class IosClerkBridgeRequiredAuthRepository(
     override suspend fun signIn(email: String, password: String): ScreenState<Unit> =
         ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
 
-    override suspend fun signUp(email: String, password: String): ScreenState<SignUpOutcome> =
+    override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> =
         ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
 
     override suspend fun verifyEmail(signUpId: String, code: String): ScreenState<Unit> =

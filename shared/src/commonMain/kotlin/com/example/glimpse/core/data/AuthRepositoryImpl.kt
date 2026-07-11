@@ -32,8 +32,8 @@ class AuthRepositoryImpl(
         ScreenState.Error(e.message ?: getString(Res.string.error_sign_in_failed))
     }
 
-    override suspend fun signUp(email: String, password: String): ScreenState<SignUpOutcome> = try {
-        val response = authApiService.signUp(email, password)
+    override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> = try {
+        val response = authApiService.signUp(email, password, username)
         when {
             response.response.status == "complete" -> {
                 val session = response.toDomain()

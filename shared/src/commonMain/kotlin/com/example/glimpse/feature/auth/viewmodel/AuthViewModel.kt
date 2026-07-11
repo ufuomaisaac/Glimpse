@@ -45,10 +45,10 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         }
     }
 
-    fun signUp(email: String, password: String) {
+    fun signUp(email: String, password: String, username: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
-            _uiState.value = when (val result = authRepository.signUp(email, password)) {
+            _uiState.value = when (val result = authRepository.signUp(email, password, username)) {
                 is ScreenState.Success -> when (result.data) {
                     is SignUpOutcome.Complete -> AuthUiState.SignedIn
                     is SignUpOutcome.NeedsEmailVerification ->
