@@ -5,7 +5,6 @@ import com.clerk.api.Clerk
 import com.clerk.api.auth.types.VerificationType
 import com.clerk.api.network.model.error.ClerkErrorResponse
 import com.clerk.api.network.serialization.ClerkResult
-import com.clerk.api.network.serialization.errorMessage
 import com.clerk.api.signup.SignUp
 import com.clerk.api.signup.sendEmailCode
 import com.clerk.api.signup.verifyCode
@@ -36,8 +35,14 @@ class ClerkAndroidAuthRepository(
             identifier = email
             this.password = password
         }) {
-            is ClerkResult.Success -> saveCurrentToken()
-            is ClerkResult.Failure -> ScreenState.Error(result.authErrorMessage)
+            is ClerkResult.Success -> {
+                Log.d(TAG, "signIn success")
+                saveCurrentToken()
+            }
+            is ClerkResult.Failure -> {
+                Log.e(TAG, "signIn failure: ${result.authErrorMessage}; detail=${result.debugDescription}", result.throwable)
+                ScreenState.Error(result.authErrorMessage)
+            }
         }
     }
 
@@ -162,6 +167,30 @@ class ClerkAndroidAuthRepository(
 }
 
 private val ClerkResult.Failure<ClerkErrorResponse>.authErrorMessage: String
-    get() = throwable?.message ?: errorMessage
+    get() {
+        val apiError = error?.errors?.firstOrNull()
+        return apiError?.longMessage
+            ?: apiError?.message
+            ?: apiError?.code?.let { "Clerk error: $it" }
+            ?: throwable?.message
+            ?: code?.let { "Clerk request failed with HTTP $it" }
+            ?: when (errorType) {
+                ClerkResult.Failure.ErrorType.API ->
+                    "Clerk rejected the auth request but returned no message. Confirm the account exists in Clerk, Native API is enabled, and email/password auth is enabled."
+                ClerkResult.Failure.ErrorType.HTTP ->
+                    "Clerk request failed without an error body. Check network access and Clerk configuration."
+                ClerkResult.Failure.ErrorType.UNKNOWN ->
+                    "Clerk auth failed before receiving a usable response. Check Logcat for GlimpseAuth details."
+            }
+    }
+
+private val ClerkResult.Failure<ClerkErrorResponse>.debugDescription: String
+    get() = buildString {
+        append("type=").append(errorType)
+        code?.let { append(", http=").append(it) }
+        error?.clerkTraceId?.let { append(", trace=").append(it) }
+        error?.errors?.firstOrNull()?.code?.let { append(", clerkCode=").append(it) }
+        throwable?.let { append(", throwable=").append(it::class.simpleName).append(':').append(it.message) }
+    }
 
 private const val TAG = "GlimpseAuth"
