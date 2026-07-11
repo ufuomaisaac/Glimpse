@@ -16,15 +16,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.designsystem.components.GlimpseAccentButton
+import com.example.glimpse.designsystem.components.GlimpseGoogleButton
 import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePasswordInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
-import com.example.glimpse.designsystem.components.GlimpseSecondaryButton
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.auth_confirm_password_placeholder
-import glimpse.shared.generated.resources.auth_continue_with_google
 import glimpse.shared.generated.resources.auth_email_placeholder
 import glimpse.shared.generated.resources.auth_have_account
 import glimpse.shared.generated.resources.auth_no_account
@@ -225,8 +224,7 @@ private fun AuthForm(
 
         if (showGoogleSignIn) {
             Spacer(Modifier.height(GlimpseDp.dp12))
-            GlimpseSecondaryButton(
-                text = stringResource(Res.string.auth_continue_with_google),
+            GlimpseGoogleButton(
                 onClick = onGoogleSignIn,
                 enabled = !isLoading,
             )
