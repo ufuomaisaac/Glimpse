@@ -34,6 +34,7 @@
     <!-- Auth errors -->
     <string name="error_sign_in_failed">Sign in failed</string>
     <string name="error_sign_in_no_session">Sign in failed: no session in response</string>
+    <string name="error_sign_in_status">Sign in failed: %1$s</string>
     <string name="error_sign_up_failed">Sign up failed</string>
     <string name="error_sign_up_no_session">Sign up failed: no session in response</string>
     <string name="error_sign_up_status">Sign up failed: %1$s</string>
