@@ -19,10 +19,12 @@ import com.example.glimpse.designsystem.components.GlimpseAccentButton
 import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePasswordInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
+import com.example.glimpse.designsystem.components.GlimpseSecondaryButton
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.auth_confirm_password_placeholder
+import glimpse.shared.generated.resources.auth_continue_with_google
 import glimpse.shared.generated.resources.auth_email_placeholder
 import glimpse.shared.generated.resources.auth_have_account
 import glimpse.shared.generated.resources.auth_no_account
@@ -62,6 +64,8 @@ fun SignInScreen(
             submitLabel = stringResource(Res.string.auth_sign_in),
             isLoading = uiState is AuthUiState.Loading,
             onSubmit = { email, password, _ -> viewModel.signIn(email, password) },
+            showGoogleSignIn = true,
+            onGoogleSignIn = viewModel::continueWithGoogle,
             footerText = stringResource(Res.string.auth_no_account),
             footerActionText = stringResource(Res.string.auth_sign_up),
             onFooterAction = onNavigateToSignUp,
@@ -102,6 +106,8 @@ fun SignUpScreen(
             isLoading = uiState is AuthUiState.Loading,
             showUsername = true,
             onSubmit = viewModel::signUp,
+            showGoogleSignIn = true,
+            onGoogleSignIn = viewModel::continueWithGoogle,
             footerText = stringResource(Res.string.auth_have_account),
             footerActionText = stringResource(Res.string.auth_sign_in),
             onFooterAction = onNavigateToSignIn,
@@ -117,6 +123,8 @@ private fun AuthForm(
     isLoading: Boolean,
     showUsername: Boolean = false,
     onSubmit: (email: String, password: String, username: String) -> Unit,
+    showGoogleSignIn: Boolean = false,
+    onGoogleSignIn: () -> Unit = {},
     footerText: String,
     footerActionText: String,
     onFooterAction: () -> Unit,
@@ -214,6 +222,15 @@ private fun AuthForm(
             isLoading = isLoading,
             enabled = canSubmit,
         )
+
+        if (showGoogleSignIn) {
+            Spacer(Modifier.height(GlimpseDp.dp12))
+            GlimpseSecondaryButton(
+                text = stringResource(Res.string.auth_continue_with_google),
+                onClick = onGoogleSignIn,
+                enabled = !isLoading,
+            )
+        }
         Spacer(Modifier.height(GlimpseDp.dp16))
 
         Row(verticalAlignment = Alignment.CenterVertically) {

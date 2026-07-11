@@ -75,9 +75,11 @@ fun GlimpseSecondaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     OutlinedButton(
         onClick = onClick,
+        enabled = enabled,
         shape = RoundedCornerShape(GlimpseDp.dp28),
         border = BorderStroke(GlimpseDp.dp2, BorderLight),
         colors = ButtonDefaults.outlinedButtonColors(

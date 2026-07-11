@@ -7,6 +7,7 @@ import com.example.glimpse.core.network.mapper.toDomain
 import com.example.glimpse.core.network.service.AuthApiService
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.error_sign_in_failed
+import glimpse.shared.generated.resources.error_google_sign_in_unavailable
 import glimpse.shared.generated.resources.error_sign_in_no_session
 import glimpse.shared.generated.resources.error_sign_out_failed
 import glimpse.shared.generated.resources.error_sign_up_failed
@@ -31,6 +32,9 @@ class AuthRepositoryImpl(
     } catch (e: Exception) {
         ScreenState.Error(e.message ?: getString(Res.string.error_sign_in_failed))
     }
+
+    override suspend fun continueWithGoogle(): ScreenState<Unit> =
+        ScreenState.Error(getString(Res.string.error_google_sign_in_unavailable))
 
     override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> = try {
         val response = authApiService.signUp(email, password, username)

@@ -6,6 +6,7 @@ import com.clerk.api.auth.types.VerificationType
 import com.clerk.api.network.model.error.ClerkErrorResponse
 import com.clerk.api.network.serialization.ClerkResult
 import com.clerk.api.signin.SignIn
+import com.clerk.api.sso.OAuthResult
 import com.clerk.api.signup.SignUp
 import com.clerk.api.signup.sendEmailCode
 import com.clerk.api.signup.verifyCode
@@ -43,6 +44,20 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "signIn failure: ${result.authErrorMessage}; detail=${result.debugDescription}", result.throwable)
+                ScreenState.Error(result.authErrorMessage)
+            }
+        }
+    }
+
+    override suspend fun continueWithGoogle(): ScreenState<Unit> {
+        ensureClerkReady()?.let { return ScreenState.Error(it) }
+        return when (val result = Clerk.auth.signUpWithGoogleOneTap()) {
+            is ClerkResult.Success -> {
+                Log.d(TAG, "google auth success: signIn=${result.value.signIn?.status}, signUp=${result.value.signUp?.status}")
+                completeOAuthResult(result.value)
+            }
+            is ClerkResult.Failure -> {
+                Log.e(TAG, "google auth failure: ${result.authErrorMessage}; detail=${result.debugDescription}", result.throwable)
                 ScreenState.Error(result.authErrorMessage)
             }
         }
@@ -89,6 +104,12 @@ class ClerkAndroidAuthRepository(
         }
         tokenStorage.clearToken()
         return ScreenState.Success(Unit)
+    }
+
+    private suspend fun completeOAuthResult(result: OAuthResult): ScreenState<Unit> {
+        result.signIn?.let { return completeSignIn(it) }
+        result.signUp?.let { return completeSignUp(it) }
+        return ScreenState.Error(getString(Res.string.error_sign_in_no_session))
     }
 
     private suspend fun completeSignIn(signIn: SignIn): ScreenState<Unit> {
