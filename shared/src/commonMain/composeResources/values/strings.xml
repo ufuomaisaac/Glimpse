@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Auth -->
+    <string name="auth_sign_in_title">Welcome back</string>
+    <string name="auth_sign_in">Sign in</string>
+    <string name="auth_sign_up_title">Create account</string>
+    <string name="auth_sign_up">Sign up</string>
+    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_have_account">Already have an account?</string>
+    <string name="auth_email_placeholder">Email address</string>
+    <string name="auth_username_placeholder">Username</string>
+    <string name="auth_password_placeholder">Password</string>
+    <string name="auth_confirm_password_placeholder">Confirm password</string>
+    <string name="auth_password_mismatch">Passwords must match</string>
+    <string name="auth_password_show">Show</string>
+    <string name="auth_password_hide">Hide</string>
+
+    <!-- Email verification -->
+    <string name="verify_title">Check your email</string>
+    <string name="verify_subtitle">Enter the 6-digit code we sent to %1$s.</string>
+    <string name="verify_code_placeholder">6-digit code</string>
+    <string name="verify_button">Verify</string>
+
+    <!-- Common -->
+    <string name="error_unexpected">Unexpected error</string>
+    <string name="signed_in">Signed in!</string>
+
+    <!-- Get stated -->
+    <string name="get_stated_title">Your private photo space</string>
+    <string name="get_stated_subtitle">Upload, organize, and share important moments from one calm, secure place.</string>
+    <string name="get_stated_button">Get started</string>
+    <string name="get_stated_have_account">I already have an account</string>
+
+    <!-- Auth errors -->
+    <string name="error_sign_in_failed">Sign in failed</string>
+    <string name="error_sign_in_no_session">Sign in failed: no session in response</string>
+    <string name="error_sign_up_failed">Sign up failed</string>
+    <string name="error_sign_up_no_session">Sign up failed: no session in response</string>
+    <string name="error_sign_up_status">Sign up failed: %1$s</string>
+    <string name="error_verification_failed">Email verification failed</string>
+    <string name="error_verification_no_session">Verification failed: no session in response</string>
+    <string name="error_sign_out_failed">Sign out failed</string>
+</resources>
