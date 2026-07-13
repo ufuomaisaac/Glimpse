@@ -1,7 +1,11 @@
 package com.example.glimpse
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import com.example.glimpse.designsystem.Background
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.feature.auth.ui.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -10,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
+import com.example.glimpse.feature.auth.ui.SplashScreen
 import com.example.glimpse.navigation.AppViewModel
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -36,9 +41,19 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                     }
                 )
                 composable<MainGraph> {
-                    SplashScreen()
+                    StartupBackground()
                 }
             }
         }
     }
+}
+
+
+@Composable
+private fun StartupBackground() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Background),
+    )
 }
