@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -35,12 +35,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.glimpse.designsystem.BorderLight
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseIcons
-import com.example.glimpse.designsystem.GlimpseSp
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.designsystem.Surface
 import com.example.glimpse.designsystem.TextMuted
 import com.example.glimpse.designsystem.TextPrimary
-import com.example.glimpse.designsystem.dmSansFontFamily
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -106,8 +104,8 @@ private fun GlimpseBaseInputTextField(
     trailingContent: (@Composable () -> Unit)? = null,
 ) {
     val shape = RoundedCornerShape(GlimpseDp.dp12)
-    val fontFamily = dmSansFontFamily()
     val endPadding = if (trailingContent == null) GlimpseDp.dp16 else GlimpseDp.dp48
+    val inputTextStyle = MaterialTheme.typography.bodyMedium
 
     BasicTextField(
         value = value,
@@ -116,12 +114,11 @@ private fun GlimpseBaseInputTextField(
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        textStyle = TextStyle(
-            color = TextPrimary,
-            fontSize = GlimpseSp.sp14,
-            fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Start,
+        textStyle = inputTextStyle.merge(
+            TextStyle(
+                color = TextPrimary,
+                textAlign = TextAlign.Start,
+            ),
         ),
         modifier = modifier
             .fillMaxWidth()
@@ -144,9 +141,7 @@ private fun GlimpseBaseInputTextField(
                         Text(
                             text = placeholder,
                             color = TextMuted,
-                            fontSize = GlimpseSp.sp14,
-                            fontFamily = fontFamily,
-                            fontWeight = FontWeight.Normal,
+                            style = inputTextStyle,
                         )
                     }
                     innerTextField()

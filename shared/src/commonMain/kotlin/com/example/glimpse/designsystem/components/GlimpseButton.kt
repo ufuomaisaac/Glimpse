@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +24,10 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.BorderLight
 import com.example.glimpse.designsystem.GlimpseDp
-import com.example.glimpse.designsystem.GlimpseSp
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.designsystem.Surface
 import com.example.glimpse.designsystem.TextPrimary
@@ -67,8 +66,7 @@ fun GlimpsePrimaryButton(
     ) {
             Text(
                 text = text,
-                fontWeight = FontWeight.Medium,
-                fontSize = GlimpseSp.sp14,
+                style = MaterialTheme.typography.labelLarge,
             )
     }
 }
@@ -95,8 +93,7 @@ fun GlimpseSecondaryButton(
     ) {
         Text(
             text = text,
-            fontWeight = FontWeight.Medium,
-            fontSize = GlimpseSp.sp14,
+            style = MaterialTheme.typography.labelLarge,
         )
     }
 }
@@ -130,8 +127,7 @@ fun GlimpseGoogleButton(
                 withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF0F9D58))) { append("l") }
                 withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFDB4437))) { append("e") }
             },
-            fontWeight = FontWeight.Medium,
-            fontSize = GlimpseSp.sp14,
+            style = MaterialTheme.typography.labelLarge,
         )
     }
 }
@@ -145,8 +141,7 @@ fun GlimpseAccentButton(
     Text(
         text = text,
         color = AccentPrimary,
-        fontWeight = FontWeight.Medium,
-        fontSize = GlimpseSp.sp14,
+        style = MaterialTheme.typography.labelLarge,
         modifier = modifier
             .semantics { role = Role.Button }
             .clickable(onClick = onClick),

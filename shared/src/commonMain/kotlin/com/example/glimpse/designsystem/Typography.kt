@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.dm_sans_regular
 import glimpse.shared.generated.resources.eras_demi_itc
@@ -64,22 +65,28 @@ object GlimpseTextStyles {
     val headingXl
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = GlimpseSp.sp28,
+            fontWeight = FontWeight.Bold,
+            fontSize = GlimpseSp.sp32,
+            lineHeight = GlimpseSp.sp32,
+            letterSpacing = 0.sp,
         )
 
     val headingLarge
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = GlimpseSp.sp22,
+            fontWeight = FontWeight.Medium,
+            fontSize = GlimpseSp.sp24,
+            lineHeight = GlimpseSp.sp24,
+            letterSpacing = 0.sp,
         )
 
     val headingMedium
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = GlimpseSp.sp18,
+            fontWeight = FontWeight.Medium,
+            fontSize = GlimpseSp.sp20,
+            lineHeight = GlimpseSp.sp20,
+            letterSpacing = 0.sp,
         )
 
     val bodyRegular
@@ -87,13 +94,26 @@ object GlimpseTextStyles {
             fontFamily = interFontFamily(),
             fontWeight = FontWeight.Normal,
             fontSize = GlimpseSp.sp16,
+            lineHeight = GlimpseSp.sp16,
+            letterSpacing = 0.sp,
         )
 
     val bodySmall
         @Composable get() = TextStyle(
             fontFamily = interFontFamily(),
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             fontSize = GlimpseSp.sp14,
+            lineHeight = GlimpseSp.sp14,
+            letterSpacing = 0.sp,
+        )
+
+    val caption
+        @Composable get() = TextStyle(
+            fontFamily = interFontFamily(),
+            fontWeight = FontWeight.Normal,
+            fontSize = GlimpseSp.sp12,
+            lineHeight = GlimpseSp.sp12,
+            letterSpacing = 0.sp,
         )
 
     val labelMono
@@ -101,6 +121,8 @@ object GlimpseTextStyles {
             fontFamily = jetBrainsMonoFontFamily(),
             fontWeight = FontWeight.Medium,
             fontSize = GlimpseSp.sp11,
+            lineHeight = GlimpseSp.sp11,
+            letterSpacing = 0.sp,
         )
 }
 
@@ -109,22 +131,71 @@ fun glimpseTypography(): Typography {
     val heading = spaceGroteskFontFamily()
     val body = interFontFamily()
 
-    val base = Typography()
+    val h1 = TextStyle(
+        fontFamily = heading,
+        fontWeight = FontWeight.Bold,
+        fontSize = GlimpseSp.sp32,
+        lineHeight = GlimpseSp.sp32,
+        letterSpacing = 0.sp,
+    )
+    val h2 = TextStyle(
+        fontFamily = heading,
+        fontWeight = FontWeight.Bold,
+        fontSize = GlimpseSp.sp24,
+        lineHeight = GlimpseSp.sp24,
+        letterSpacing = 0.sp,
+    )
+    val h3 = TextStyle(
+        fontFamily = heading,
+        fontWeight = FontWeight.Medium,
+        fontSize = GlimpseSp.sp18,
+        lineHeight = GlimpseSp.sp18,
+        letterSpacing = 0.sp,
+    )
+    val bodyRegular = TextStyle(
+        fontFamily = body,
+        fontWeight = FontWeight.Normal,
+        fontSize = GlimpseSp.sp16,
+        lineHeight = GlimpseSp.sp16,
+        letterSpacing = 0.sp,
+    )
+    val bodySmall = TextStyle(
+        fontFamily = body,
+        fontWeight = FontWeight.Normal,
+        fontSize = GlimpseSp.sp14,
+        lineHeight = GlimpseSp.sp14,
+        letterSpacing = 0.sp,
+    )
+    val labelMedium = TextStyle(
+        fontFamily = body,
+        fontWeight = FontWeight.Medium,
+        fontSize = GlimpseSp.sp13,
+        lineHeight = GlimpseSp.sp13,
+        letterSpacing = 0.sp,
+    )
+    val caption = TextStyle(
+        fontFamily = body,
+        fontWeight = FontWeight.Normal,
+        fontSize = GlimpseSp.sp12,
+        lineHeight = GlimpseSp.sp12,
+        letterSpacing = 0.sp,
+    )
+
     return Typography(
-        displayLarge = base.displayLarge.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        displayMedium = base.displayMedium.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        displaySmall = base.displaySmall.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        headlineLarge = base.headlineLarge.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        headlineMedium = base.headlineMedium.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        headlineSmall = base.headlineSmall.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        titleLarge = base.titleLarge.copy(fontFamily = heading, fontWeight = FontWeight.SemiBold),
-        titleMedium = base.titleMedium.copy(fontFamily = heading, fontWeight = FontWeight.Medium),
-        titleSmall = base.titleSmall.copy(fontFamily = heading, fontWeight = FontWeight.Medium),
-        bodyLarge = base.bodyLarge.copy(fontFamily = body),
-        bodyMedium = base.bodyMedium.copy(fontFamily = body),
-        bodySmall = base.bodySmall.copy(fontFamily = body),
-        labelLarge = base.labelLarge.copy(fontFamily = body, fontWeight = FontWeight.Medium),
-        labelMedium = base.labelMedium.copy(fontFamily = body, fontWeight = FontWeight.Medium),
-        labelSmall = base.labelSmall.copy(fontFamily = body, fontWeight = FontWeight.Medium),
+        displayLarge = h1,
+        displayMedium = h1,
+        displaySmall = h2,
+        headlineLarge = h1,
+        headlineMedium = h2,
+        headlineSmall = h3,
+        titleLarge = h1,
+        titleMedium = h2,
+        titleSmall = h3,
+        bodyLarge = bodyRegular,
+        bodyMedium = bodyRegular,
+        bodySmall = bodySmall,
+        labelLarge = labelMedium,
+        labelMedium = labelMedium,
+        labelSmall = caption,
     )
 }
