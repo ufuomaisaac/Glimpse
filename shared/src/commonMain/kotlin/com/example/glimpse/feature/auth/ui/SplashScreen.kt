@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.glimpse.designsystem.AccentPrimary
-import com.example.glimpse.designsystem.Background
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseIcons
 import com.example.glimpse.designsystem.GlimpseTheme
@@ -29,12 +28,15 @@ fun SplashScreen(
             .fillMaxSize()
             .background(
                 Brush.linearGradient(
-                    colors = listOf(AccentPrimary, Background),
+                    colors = listOf(
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.background,
+                    ),
                 ),
             ),
     ) {
         Icon(
-            painter = painterResource(GlimpseIcons.LogoBadge),
+            painter = painterResource(GlimpseIcons.LogoMarkLight),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier

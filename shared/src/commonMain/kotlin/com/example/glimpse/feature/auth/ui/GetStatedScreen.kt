@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseDp.dp16
 import com.example.glimpse.designsystem.GlimpseDp.dp32
@@ -62,7 +61,7 @@ fun GetStatedScreen(
             text = stringResource(Res.string.get_stated_title),
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
-            color = AccentPrimary
+            color = MaterialTheme.colorScheme.primary,
         )
 
 
