@@ -35,6 +35,7 @@ import glimpse.shared.generated.resources.get_stated_feature_sharing
 import glimpse.shared.generated.resources.get_stated_no_account_needed_to_receive_photos
 import glimpse.shared.generated.resources.get_stated_subtitle
 import glimpse.shared.generated.resources.get_stated_title
+import glimpse.shared.generated.resources.get_stated_title_continuation
 import glimpse.shared.generated.resources.welcome_image
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -69,6 +70,14 @@ fun GetStatedScreen(
 
         Text(
             text = stringResource(Res.string.get_stated_title),
+            style = GlimpseTextStyles.headingH3,
+            textAlign = TextAlign.Start,
+            fontSize = GlimpseSp.sp24
+        )
+        Spacer(Modifier.height(GlimpseDp.dp2))
+
+        Text(
+            text = stringResource(Res.string.get_stated_title_continuation),
             style = GlimpseTextStyles.headingH3,
             textAlign = TextAlign.Start,
             fontSize = GlimpseSp.sp24

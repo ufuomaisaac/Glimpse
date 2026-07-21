@@ -15,6 +15,7 @@
     <string name="auth_password_show">Show</string>
     <string name="auth_password_hide">Hide</string>
     <string name="auth_google">Google</string>
+    <string name="auth_or_with_email">or with email</string>
 
     <!-- Email verification -->
     <string name="verify_title">Check your email</string>
@@ -29,8 +30,8 @@
     <string name="signed_in">Signed in!</string>
 
     <!-- Get stated -->
-    <string name="get_stated_title">Your event photos,
-sorted by face.</string>
+    <string name="get_stated_title">Your event photos,</string>
+    <string name="get_stated_title_continuation">sorted by face.</string>
     <string name="get_stated_subtitle">Upload once. We cluster every photo by who is in them, then let each guest download only theirs.</string>
     <string name="get_stated_feature_matching">Automatic face matching</string>
     <string name="get_stated_feature_sharing">Easy sharing with every guest</string>
@@ -40,9 +41,16 @@ sorted by face.</string>
     <string name="get_stated_no_account_needed_to_receive_photos">No account needed to receive photos</string>
 
     <!-- Sign Up -->
-    <string name="sign_in_title">Every guest gets
-their photos.</string>
-    <string name="sign_in_subtitle">Upload once. We sort by face. Share instantly. </string>
+    <string name="sign_up_title">Every guest gets </string>
+    <string name="sign_up_title_continuation">their photos.</string>
+    <string name="sign_up_subtitle">Upload once. We sort by face. Share instantly. </string>
+
+
+
+    <!-- Sign In -->
+    <string name="sign_in_title">Good to see </string>
+    <string name="sign_in_title_continuation">you again.</string>
+    <string name="sign_in_subtitle">Sign in to manage your events and galleries.</string>
 
 
 

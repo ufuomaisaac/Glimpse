@@ -32,15 +32,16 @@ import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.auth_or_with_email
-import glimpse.shared.generated.resources.sign_in_subtitle
-import glimpse.shared.generated.resources.sign_in_title
-import glimpse.shared.generated.resources.sign_in_title_continuation
+import glimpse.shared.generated.resources.sign_up_subtitle
+import glimpse.shared.generated.resources.sign_up_title
+import glimpse.shared.generated.resources.sign_up_title_continuation
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SignInScreen(
-    onNavigateToSignUp: () -> Unit,
+fun SignUpScreen(
+    onNavigateToSignIn: () -> Unit,
+    onNavigateToEmailVerification: (signUpId: String, email: String) -> Unit,
     onSignedIn: () -> Unit,
     viewModel: AuthViewModel = koinViewModel(),
 ) {
@@ -50,6 +51,10 @@ fun SignInScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is AuthUiState.SignedIn -> onSignedIn()
+            is AuthUiState.AwaitingEmailVerification -> {
+                viewModel.clearError()
+                onNavigateToEmailVerification(state.signUpId, state.email)
+            }
             is AuthUiState.Error -> {
                 snackbarHostState.showSnackbar(state.message)
                 viewModel.clearError()
@@ -59,7 +64,7 @@ fun SignInScreen(
     }
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
-        SignInContent(
+        SignUpContent(
             onGoogleSignIn = viewModel::continueWithGoogle,
             googleSignInEnabled = uiState !is AuthUiState.Loading,
             modifier = Modifier.padding(padding),
@@ -68,7 +73,7 @@ fun SignInScreen(
 }
 
 @Composable
-private fun SignInContent(
+private fun SignUpContent(
     onGoogleSignIn: () -> Unit = {},
     googleSignInEnabled: Boolean = true,
     modifier: Modifier = Modifier,
@@ -87,27 +92,27 @@ private fun SignInContent(
         Spacer(Modifier.height(GlimpseDp.dp24))
 
         Text(
-            text = stringResource(Res.string.sign_in_title),
+            text = stringResource(Res.string.sign_up_title),
             style = GlimpseTextStyles.headingH3,
             textAlign = TextAlign.Start,
-            fontSize = GlimpseSp.sp24
+            fontSize = GlimpseSp.sp24,
         )
 
         Spacer(Modifier.height(GlimpseDp.dp2))
 
         Text(
-            text = stringResource(Res.string.sign_in_title_continuation),
+            text = stringResource(Res.string.sign_up_title_continuation),
             style = GlimpseTextStyles.headingH3,
             textAlign = TextAlign.Start,
-            fontSize = GlimpseSp.sp24
+            fontSize = GlimpseSp.sp24,
         )
 
         Spacer(Modifier.height(GlimpseDp.dp4))
 
         Text(
-            text = stringResource(Res.string.sign_in_subtitle),
+            text = stringResource(Res.string.sign_up_subtitle),
             style = GlimpseTextStyles.labelMedium,
-            fontSize = GlimpseSp.sp10
+            fontSize = GlimpseSp.sp10,
         )
 
         Spacer(Modifier.height(GlimpseDp.dp24))
@@ -145,16 +150,16 @@ private fun SignInContent(
 
 @Preview(showBackground = true)
 @Composable
-private fun SignInContentPreview() {
+private fun SignUpContentPreview() {
     GlimpseTheme {
-        SignInContent()
+        SignUpContent()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SignInContentDarkPreview() {
+private fun SignUpContentDarkPreview() {
     GlimpseTheme(darkTheme = true) {
-        SignInContent()
+        SignUpContent()
     }
 }
