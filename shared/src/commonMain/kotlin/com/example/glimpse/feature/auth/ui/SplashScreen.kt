@@ -10,9 +10,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.glimpse.designsystem.Background
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseIcons
 import com.example.glimpse.designsystem.GlimpseTheme
@@ -26,22 +26,15 @@ fun SplashScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(
-                Brush.linearGradient(
-                    colors = listOf(
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.background,
-                    ),
-                ),
-            ),
+            .background(Background),
     ) {
         Icon(
-            painter = painterResource(GlimpseIcons.LogoBadge),
+            painter = painterResource(GlimpseIcons.ScanFace),
             contentDescription = null,
             tint = Color.Unspecified,
             modifier = Modifier
                 .align(Alignment.Center)
-                .size(GlimpseDp.dp56),
+                .size(GlimpseDp.dp64),
         )
         content()
     }

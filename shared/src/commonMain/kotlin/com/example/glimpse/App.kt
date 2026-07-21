@@ -1,5 +1,11 @@
 package com.example.glimpse
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import com.example.glimpse.designsystem.Background
+import com.example.glimpse.designsystem.GlimpseTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,9 +42,19 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                     },
                 )
                 composable<MainGraph> {
-                    //SplashScreen()
+                    StartupBackground()
                 }
             }
         }
     }
+}
+
+
+@Composable
+private fun StartupBackground() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Background),
+    )
 }
