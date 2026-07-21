@@ -23,15 +23,21 @@
     <string name="verify_button">Verify</string>
 
     <!-- Common -->
+    <string name="app_name">Glimpse</string>
     <string name="error_unexpected">Unexpected error</string>
     <string name="error_google_sign_in_unavailable">Google sign-in is only available on Android.</string>
     <string name="signed_in">Signed in!</string>
 
     <!-- Get stated -->
-    <string name="get_stated_title">Your private photo space</string>
-    <string name="get_stated_subtitle">Upload, organize, and share important moments from one calm, secure place.</string>
+    <string name="get_stated_title">Your event photos,
+sorted by face.</string>
+    <string name="get_stated_subtitle">Upload once. We cluster every photo by who is in them, then let each guest download only theirs.</string>
+    <string name="get_stated_feature_matching">Automatic face matching</string>
+    <string name="get_stated_feature_sharing">Easy sharing with every guest</string>
+    <string name="get_stated_feature_private">Private and secure</string>
     <string name="get_stated_button">Get started</string>
     <string name="get_stated_have_account">I already have an account</string>
+    <string name="get_stated_no_account_needed_to_receive_photos">No account needed to receive photos</string>
 
     <!-- Auth errors -->
     <string name="error_sign_in_failed">Sign in failed</string>

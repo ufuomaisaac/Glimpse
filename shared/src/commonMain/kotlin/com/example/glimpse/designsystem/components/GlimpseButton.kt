@@ -22,16 +22,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.withStyle
-import com.example.glimpse.designsystem.AccentPrimary
-import com.example.glimpse.designsystem.BorderLight
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.designsystem.Surface
-import com.example.glimpse.designsystem.TextPrimary
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.glimpse.designsystem.GlimpseSp
+import com.example.glimpse.designsystem.GlimpseTextStyles
+import glimpse.shared.generated.resources.Res
+import glimpse.shared.generated.resources.auth_continue_with_google
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GlimpsePrimaryButton(
@@ -42,31 +40,33 @@ fun GlimpsePrimaryButton(
     enabled: Boolean = true,
 ) {
     val shape = RoundedCornerShape(GlimpseDp.dp28)
+    val colors = MaterialTheme.colorScheme
 
     Button(
         onClick = onClick,
         enabled = enabled && !isLoading,
         shape = shape,
         colors = ButtonDefaults.buttonColors(
-            containerColor = AccentPrimary,
-            contentColor = Surface,
-            disabledContainerColor = AccentPrimary.copy(alpha = 0.5f),
-            disabledContentColor = Surface.copy(alpha = 0.7f),
+            containerColor = colors.primary,
+            contentColor = colors.onPrimary,
+            disabledContainerColor = colors.primary.copy(alpha = 0.5f),
+            disabledContentColor = colors.onPrimary.copy(alpha = 0.7f),
         ),
         contentPadding = PaddingValues(horizontal = GlimpseDp.dp28, vertical = GlimpseDp.dp16),
         modifier = modifier
             .shadow(
                 elevation = GlimpseDp.dp8,
                 shape = shape,
-                spotColor = AccentPrimary.copy(alpha = 0.25f),
-                ambientColor = AccentPrimary.copy(alpha = 0.10f),
+                spotColor = colors.primary.copy(alpha = 0.25f),
+                ambientColor = colors.primary.copy(alpha = 0.10f),
             )
             .fillMaxWidth()
             .height(GlimpseDp.dp54),
     ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.labelLarge,
+                style = GlimpseTextStyles.headingH1,
+                fontSize = GlimpseSp.sp16
             )
     }
 }
@@ -78,14 +78,15 @@ fun GlimpseSecondaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val colors = MaterialTheme.colorScheme
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
         shape = RoundedCornerShape(GlimpseDp.dp28),
-        border = BorderStroke(GlimpseDp.dp2, BorderLight),
+        border = BorderStroke(GlimpseDp.dp2, colors.outlineVariant),
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Surface,
-            contentColor = TextPrimary,
+            containerColor = colors.surface,
+            contentColor = colors.onSurface,
         ),
         modifier = modifier
             .fillMaxWidth()
@@ -104,29 +105,22 @@ fun GlimpseGoogleButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val colors = MaterialTheme.colorScheme
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
         shape = RoundedCornerShape(GlimpseDp.dp28),
-        border = BorderStroke(GlimpseDp.dp2, BorderLight),
+        border = BorderStroke(GlimpseDp.dp2, colors.outlineVariant),
         colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = Surface,
-            contentColor = TextPrimary,
+            containerColor = colors.surface,
+            contentColor = colors.onSurface,
         ),
         modifier = modifier
             .fillMaxWidth()
             .height(GlimpseDp.dp56),
     ) {
         Text(
-            text = buildAnnotatedString {
-                append("Continue with ")
-                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF4285F4))) { append("G") }
-                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFDB4437))) { append("o") }
-                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFF4B400))) { append("o") }
-                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF4285F4))) { append("g") }
-                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFF0F9D58))) { append("l") }
-                withStyle(SpanStyle(color = androidx.compose.ui.graphics.Color(0xFFDB4437))) { append("e") }
-            },
+            text = stringResource(Res.string.auth_continue_with_google),
             style = MaterialTheme.typography.labelLarge,
         )
     }
@@ -140,7 +134,7 @@ fun GlimpseAccentButton(
 ) {
     Text(
         text = text,
-        color = AccentPrimary,
+        color = MaterialTheme.colorScheme.primary,
         style = MaterialTheme.typography.labelLarge,
         modifier = modifier
             .semantics { role = Role.Button }

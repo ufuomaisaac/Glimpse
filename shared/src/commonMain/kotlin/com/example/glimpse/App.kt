@@ -1,15 +1,15 @@
 package com.example.glimpse
 
-import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.feature.auth.ui.SplashScreen
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
+import com.example.glimpse.feature.auth.ui.SplashScreen
 import com.example.glimpse.navigation.AppViewModel
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -33,10 +33,10 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                         navController.navigate(MainGraph) {
                             popUpTo(AuthGraph) { inclusive = true }
                         }
-                    }
+                    },
                 )
                 composable<MainGraph> {
-                    SplashScreen()
+                    //SplashScreen()
                 }
             }
         }

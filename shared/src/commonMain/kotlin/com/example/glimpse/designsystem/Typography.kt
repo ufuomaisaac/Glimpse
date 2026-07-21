@@ -62,7 +62,7 @@ fun jetBrainsMonoFontFamily() = FontFamily(
 )
 
 object GlimpseTextStyles {
-    val headingXl
+    val headingH1
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
             fontWeight = FontWeight.Bold,
@@ -71,7 +71,7 @@ object GlimpseTextStyles {
             letterSpacing = 0.sp,
         )
 
-    val headingLarge
+    val headingH2
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
             fontWeight = FontWeight.Medium,
@@ -80,7 +80,7 @@ object GlimpseTextStyles {
             letterSpacing = 0.sp,
         )
 
-    val headingMedium
+    val headingH3
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
             fontWeight = FontWeight.Medium,
@@ -116,7 +116,7 @@ object GlimpseTextStyles {
             letterSpacing = 0.sp,
         )
 
-    val labelMono
+    val labelMedium
         @Composable get() = TextStyle(
             fontFamily = jetBrainsMonoFontFamily(),
             fontWeight = FontWeight.Medium,

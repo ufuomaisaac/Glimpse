@@ -18,7 +18,7 @@ val BorderLight = Color(0xFFE2E8F0)
 
 // Dark
 val DarkBackground = Color(0xFF0F172A)
-val DarkSurface = Color(0xFFFFFFFF)
+val DarkSurface = Color(0xFF1E293B)
 
 val DarkAccentTint = Color(0xFF064E3B)
 val DarkAccentTextOnTint = Color(0xFFA7F3D0)

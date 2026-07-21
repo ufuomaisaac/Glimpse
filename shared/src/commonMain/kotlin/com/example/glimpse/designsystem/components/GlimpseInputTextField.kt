@@ -26,19 +26,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.glimpse.designsystem.BorderLight
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseIcons
 import com.example.glimpse.designsystem.GlimpseTheme
-import com.example.glimpse.designsystem.Surface
-import com.example.glimpse.designsystem.TextMuted
-import com.example.glimpse.designsystem.TextPrimary
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -84,7 +79,7 @@ fun GlimpsePasswordInputTextField(
                 Icon(
                     painter = painterResource(GlimpseIcons.Eye),
                     contentDescription = "Toggle password visibility",
-                    tint = Color.Unspecified,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(GlimpseDp.dp20),
                 )
             }
@@ -106,6 +101,7 @@ private fun GlimpseBaseInputTextField(
     val shape = RoundedCornerShape(GlimpseDp.dp12)
     val endPadding = if (trailingContent == null) GlimpseDp.dp16 else GlimpseDp.dp48
     val inputTextStyle = MaterialTheme.typography.bodyMedium
+    val colors = MaterialTheme.colorScheme
 
     BasicTextField(
         value = value,
@@ -116,7 +112,7 @@ private fun GlimpseBaseInputTextField(
         keyboardActions = keyboardActions,
         textStyle = inputTextStyle.merge(
             TextStyle(
-                color = TextPrimary,
+                color = colors.onSurface,
                 textAlign = TextAlign.Start,
             ),
         ),
@@ -124,8 +120,8 @@ private fun GlimpseBaseInputTextField(
             .fillMaxWidth()
             .height(GlimpseDp.dp52)
             .clip(shape)
-            .background(Surface)
-            .border(GlimpseDp.dp1, BorderLight, shape),
+            .background(colors.surface)
+            .border(GlimpseDp.dp1, colors.outlineVariant, shape),
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -140,7 +136,7 @@ private fun GlimpseBaseInputTextField(
                     if (value.isEmpty()) {
                         Text(
                             text = placeholder,
-                            color = TextMuted,
+                            color = colors.outline,
                             style = inputTextStyle,
                         )
                     }
