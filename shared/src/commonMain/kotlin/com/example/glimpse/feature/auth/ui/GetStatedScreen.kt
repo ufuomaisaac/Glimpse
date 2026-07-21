@@ -113,7 +113,7 @@ fun GetStatedScreen(
             )
         }
 
-        Spacer(Modifier.height(GlimpseDp.dp16))
+        Spacer(Modifier.height(GlimpseDp.dp32))
 
         GlimpsePrimaryButton(
             modifier = Modifier,
