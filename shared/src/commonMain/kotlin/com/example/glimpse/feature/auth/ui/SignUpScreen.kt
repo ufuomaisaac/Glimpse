@@ -26,9 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseSp
 import com.example.glimpse.designsystem.GlimpseTextStyles
@@ -43,24 +47,28 @@ import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
-import glimpse.shared.generated.resources.auth_create_an_account
 import glimpse.shared.generated.resources.auth_email
-import glimpse.shared.generated.resources.auth_forgotten_password
-import glimpse.shared.generated.resources.auth_new_here
+import glimpse.shared.generated.resources.auth_have_account
+import glimpse.shared.generated.resources.auth_legal_connector
+import glimpse.shared.generated.resources.auth_legal_prefix
+import glimpse.shared.generated.resources.auth_log_in
 import glimpse.shared.generated.resources.auth_or_with_email
 import glimpse.shared.generated.resources.auth_password
-import glimpse.shared.generated.resources.auth_sign_in
-import glimpse.shared.generated.resources.sign_in_subtitle
-import glimpse.shared.generated.resources.sign_in_title
-import glimpse.shared.generated.resources.sign_in_title_continuation
+import glimpse.shared.generated.resources.auth_privacy_policy
+import glimpse.shared.generated.resources.auth_create_account
+import glimpse.shared.generated.resources.auth_terms_of_service
+import glimpse.shared.generated.resources.auth_username
+import glimpse.shared.generated.resources.sign_up_subtitle
+import glimpse.shared.generated.resources.sign_up_title
+import glimpse.shared.generated.resources.sign_up_title_continuation
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SignInScreen(
-    onNavigateToSignUp: () -> Unit,
+fun SignUpScreen(
+    onNavigateToSignIn: () -> Unit,
+    onNavigateToEmailVerification: (signUpId: String, email: String) -> Unit,
     onSignedIn: () -> Unit,
-    onForgottenPassword: () -> Unit = {},
     viewModel: AuthViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -69,6 +77,10 @@ fun SignInScreen(
     LaunchedEffect(uiState) {
         when (val state = uiState) {
             is AuthUiState.SignedIn -> onSignedIn()
+            is AuthUiState.AwaitingEmailVerification -> {
+                viewModel.clearError()
+                onNavigateToEmailVerification(state.signUpId, state.email)
+            }
             is AuthUiState.Error -> {
                 snackbarHostState.showSnackbar(state.message)
                 viewModel.clearError()
@@ -78,11 +90,10 @@ fun SignInScreen(
     }
 
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { padding ->
-        SignInContent(
+        SignUpContent(
             onGoogleSignIn = viewModel::continueWithGoogle,
-            onSignIn = viewModel::signIn,
-            onCreateAccount = onNavigateToSignUp,
-            onForgottenPassword = onForgottenPassword,
+            onSignUp = viewModel::signUp,
+            onLogIn = onNavigateToSignIn,
             googleSignInEnabled = uiState !is AuthUiState.Loading,
             isLoading = uiState is AuthUiState.Loading,
             modifier = Modifier.padding(padding),
@@ -91,18 +102,18 @@ fun SignInScreen(
 }
 
 @Composable
-private fun SignInContent(
+private fun SignUpContent(
     onGoogleSignIn: () -> Unit = {},
-    onSignIn: (email: String, password: String) -> Unit = { _, _ -> },
-    onCreateAccount: () -> Unit = {},
-    onForgottenPassword: () -> Unit = {},
+    onSignUp: (email: String, password: String, username: String) -> Unit = { _, _, _ -> },
+    onLogIn: () -> Unit = {},
     googleSignInEnabled: Boolean = true,
     isLoading: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val canSubmit = email.isNotBlank() && password.isNotBlank()
+    val canSubmit = username.isNotBlank() && email.isNotBlank() && password.isNotBlank()
 
     Column(
         modifier = modifier
@@ -120,27 +131,27 @@ private fun SignInContent(
         Spacer(Modifier.height(GlimpseDp.dp24))
 
         Text(
-            text = stringResource(Res.string.sign_in_title),
+            text = stringResource(Res.string.sign_up_title),
             style = GlimpseTextStyles.headingH3,
             textAlign = TextAlign.Start,
-            fontSize = GlimpseSp.sp24
+            fontSize = GlimpseSp.sp24,
         )
 
         Spacer(Modifier.height(GlimpseDp.dp2))
 
         Text(
-            text = stringResource(Res.string.sign_in_title_continuation),
+            text = stringResource(Res.string.sign_up_title_continuation),
             style = GlimpseTextStyles.headingH3,
             textAlign = TextAlign.Start,
-            fontSize = GlimpseSp.sp24
+            fontSize = GlimpseSp.sp24,
         )
 
         Spacer(Modifier.height(GlimpseDp.dp4))
 
         Text(
-            text = stringResource(Res.string.sign_in_subtitle),
+            text = stringResource(Res.string.sign_up_subtitle),
             style = GlimpseTextStyles.labelMedium,
-            fontSize = GlimpseSp.sp10
+            fontSize = GlimpseSp.sp10,
         )
 
         Spacer(Modifier.height(GlimpseDp.dp24))
@@ -164,7 +175,7 @@ private fun SignInContent(
             Text(
                 text = stringResource(Res.string.auth_or_with_email),
                 color = TextSecondary,
-                style = GlimpseTextStyles.overline,
+                style = GlimpseTextStyles.bodySmall.copy(fontSize = GlimpseSp.sp10),
                 modifier = Modifier.padding(horizontal = GlimpseDp.dp12),
             )
             HorizontalDivider(
@@ -173,8 +184,19 @@ private fun SignInContent(
                 color = MaterialTheme.colorScheme.outlineVariant,
             )
         }
-
         Spacer(Modifier.height(GlimpseDp.dp24))
+
+        Text(text = stringResource(Res.string.auth_username),
+            style = GlimpseTextStyles.overline)
+
+        Spacer(Modifier.height(GlimpseDp.dp8))
+
+        GlimpseInputTextField(
+            value = username,
+            onValueChange = { username = it },
+        )
+
+        Spacer(Modifier.height(GlimpseDp.dp16))
 
         Text(text = stringResource(Res.string.auth_email),
             style = GlimpseTextStyles.overline)
@@ -198,21 +220,32 @@ private fun SignInContent(
             onValueChange = { password = it },
         )
 
-        Spacer(Modifier.height(GlimpseDp.dp12))
-
-        GlimpseAccentButton(
-            text = stringResource(Res.string.auth_forgotten_password),
-            onClick = onForgottenPassword,
-            modifier = Modifier.align(Alignment.End),
-        )
-
         Spacer(Modifier.height(GlimpseDp.dp32))
 
         GlimpsePrimaryButton(
-            text = stringResource(Res.string.auth_sign_in),
-            onClick = { onSignIn(email, password) },
+            text = stringResource(Res.string.auth_create_account),
+            onClick = { onSignUp(email, password, username) },
             isLoading = isLoading,
             enabled = canSubmit,
+        )
+
+        Spacer(Modifier.height(GlimpseDp.dp12))
+
+        Text(
+            text = buildAnnotatedString {
+                append(stringResource(Res.string.auth_legal_prefix))
+                withStyle(SpanStyle(color = AccentPrimary)) {
+                    append(stringResource(Res.string.auth_terms_of_service))
+                }
+                append(stringResource(Res.string.auth_legal_connector))
+                withStyle(SpanStyle(color = AccentPrimary)) {
+                    append(stringResource(Res.string.auth_privacy_policy))
+                }
+                append(".")
+            },
+            style = GlimpseTextStyles.legal,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(Modifier.height(GlimpseDp.dp16))
@@ -223,32 +256,34 @@ private fun SignInContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(Res.string.auth_new_here),
+                text = stringResource(Res.string.auth_have_account),
                 style = GlimpseTextStyles.bodySmall,
                 fontSize = GlimpseSp.sp12
             )
             Spacer(Modifier.width(GlimpseDp.dp4))
             GlimpseAccentButton(
-                text = stringResource(Res.string.auth_create_an_account),
-                onClick = onCreateAccount,
+                text = stringResource(Res.string.auth_log_in),
+                onClick = onLogIn,
             )
         }
-    }
 
+        Spacer(Modifier.height(GlimpseDp.dp32))
+
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SignInContentPreview() {
+private fun SignUpContentPreview() {
     GlimpseTheme {
-        SignInContent()
+        SignUpContent()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SignInContentDarkPreview() {
+private fun SignUpContentDarkPreview() {
     GlimpseTheme(darkTheme = true) {
-        SignInContent()
+        SignUpContent()
     }
 }

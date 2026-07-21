@@ -4,9 +4,16 @@
     <string name="auth_sign_in_title">Welcome back</string>
     <string name="auth_sign_in">Sign in</string>
     <string name="auth_sign_up_title">Create account</string>
-    <string name="auth_sign_up">Sign up</string>
+    <string name="auth_create_account">Create account</string>
+    <string name="auth_new_here">New here?</string>
+    <string name="auth_create_an_account">Create an account</string>
     <string name="auth_no_account">Don't have an account?</string>
     <string name="auth_have_account">Already have an account?</string>
+    <string name="auth_log_in">Log in</string>
+    <string name="auth_forgotten_password">Forgotten Password?</string>
+    <string name="auth_username">USERNAME</string>
+    <string name="auth_email">EMAIL</string>
+    <string name="auth_password">PASSWORD</string>
     <string name="auth_email_placeholder">Email address</string>
     <string name="auth_username_placeholder">Username</string>
     <string name="auth_password_placeholder">Password</string>
@@ -14,7 +21,12 @@
     <string name="auth_password_mismatch">Passwords must match</string>
     <string name="auth_password_show">Show</string>
     <string name="auth_password_hide">Hide</string>
-    <string name="auth_continue_with_google">Continue with Google</string>
+    <string name="auth_google">Google</string>
+    <string name="auth_or_with_email">or with email</string>
+    <string name="auth_legal_prefix">By continuing you agree to our </string>
+    <string name="auth_terms_of_service">Terms of Service</string>
+    <string name="auth_legal_connector"> &amp; </string>
+    <string name="auth_privacy_policy">Privacy Policy</string>
 
     <!-- Email verification -->
     <string name="verify_title">Check your email</string>
@@ -23,15 +35,35 @@
     <string name="verify_button">Verify</string>
 
     <!-- Common -->
+    <string name="app_name">Glimpse</string>
     <string name="error_unexpected">Unexpected error</string>
     <string name="error_google_sign_in_unavailable">Google sign-in is only available on Android.</string>
     <string name="signed_in">Signed in!</string>
 
     <!-- Get stated -->
-    <string name="get_stated_title">Your private photo space</string>
-    <string name="get_stated_subtitle">Upload, organize, and share important moments from one calm, secure place.</string>
+    <string name="get_stated_title">Your event photos,</string>
+    <string name="get_stated_title_continuation">sorted by face.</string>
+    <string name="get_stated_subtitle">Upload once. We cluster every photo by who is in them, then let each guest download only theirs.</string>
+    <string name="get_stated_feature_matching">Automatic face matching</string>
+    <string name="get_stated_feature_sharing">Easy sharing with every guest</string>
+    <string name="get_stated_feature_private">Private and secure</string>
     <string name="get_stated_button">Get started</string>
     <string name="get_stated_have_account">I already have an account</string>
+    <string name="get_stated_no_account_needed_to_receive_photos">No account needed to receive photos</string>
+
+    <!-- Sign Up -->
+    <string name="sign_up_title">Every guest gets </string>
+    <string name="sign_up_title_continuation">their photos.</string>
+    <string name="sign_up_subtitle">Upload once. We sort by face. Share instantly. </string>
+
+
+
+    <!-- Sign In -->
+    <string name="sign_in_title">Good to see </string>
+    <string name="sign_in_title_continuation">you again.</string>
+    <string name="sign_in_subtitle">Sign in to manage your events and galleries.</string>
+
+
 
     <!-- Auth errors -->
     <string name="error_sign_in_failed">Sign in failed</string>
@@ -43,4 +75,6 @@
     <string name="error_verification_failed">Email verification failed</string>
     <string name="error_verification_no_session">Verification failed: no session in response</string>
     <string name="error_sign_out_failed">Sign out failed</string>
+
+
 </resources>

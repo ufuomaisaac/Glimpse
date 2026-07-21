@@ -12,6 +12,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
 import com.example.glimpse.feature.auth.ui.SplashScreen
@@ -38,7 +39,7 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                         navController.navigate(MainGraph) {
                             popUpTo(AuthGraph) { inclusive = true }
                         }
-                    }
+                    },
                 )
                 composable<MainGraph> {
                     StartupBackground()
