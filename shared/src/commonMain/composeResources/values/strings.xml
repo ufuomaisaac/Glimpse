@@ -14,7 +14,7 @@
     <string name="auth_password_mismatch">Passwords must match</string>
     <string name="auth_password_show">Show</string>
     <string name="auth_password_hide">Hide</string>
-    <string name="auth_continue_with_google">Continue with Google</string>
+    <string name="auth_google">Google</string>
 
     <!-- Email verification -->
     <string name="verify_title">Check your email</string>
@@ -39,6 +39,13 @@ sorted by face.</string>
     <string name="get_stated_have_account">I already have an account</string>
     <string name="get_stated_no_account_needed_to_receive_photos">No account needed to receive photos</string>
 
+    <!-- Sign Up -->
+    <string name="sign_in_title">Every guest gets
+their photos.</string>
+    <string name="sign_in_subtitle">Upload once. We sort by face. Share instantly. </string>
+
+
+
     <!-- Auth errors -->
     <string name="error_sign_in_failed">Sign in failed</string>
     <string name="error_sign_in_no_session">Sign in failed: no session in response</string>
@@ -49,4 +56,6 @@ sorted by face.</string>
     <string name="error_verification_failed">Email verification failed</string>
     <string name="error_verification_no_session">Verification failed: no session in response</string>
     <string name="error_sign_out_failed">Sign out failed</string>
+
+
 </resources>

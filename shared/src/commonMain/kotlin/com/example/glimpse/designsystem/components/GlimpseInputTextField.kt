@@ -1,7 +1,6 @@
 package com.example.glimpse.designsystem.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,11 +25,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.dropShadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.shadow.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseIcons
 import com.example.glimpse.designsystem.GlimpseTheme
@@ -102,6 +108,10 @@ private fun GlimpseBaseInputTextField(
     val endPadding = if (trailingContent == null) GlimpseDp.dp16 else GlimpseDp.dp48
     val inputTextStyle = MaterialTheme.typography.bodyMedium
     val colors = MaterialTheme.colorScheme
+    val isDarkTheme = colors.background.luminance() < 0.5f
+    val containerColor = if (isDarkTheme) colors.surface else colors.background
+    val topBorderColor = Color(0x12F8FAFC)
+    val shadowColor = Color(0x59000000)
 
     BasicTextField(
         value = value,
@@ -119,9 +129,25 @@ private fun GlimpseBaseInputTextField(
         modifier = modifier
             .fillMaxWidth()
             .height(GlimpseDp.dp52)
+            .dropShadow(
+                shape = shape,
+                shadow = Shadow(
+                    radius = GlimpseDp.dp3,
+                    color = shadowColor,
+                    offset = DpOffset(x = GlimpseDp.dp0, y = GlimpseDp.dp1),
+                ),
+            )
             .clip(shape)
-            .background(colors.surface)
-            .border(GlimpseDp.dp1, colors.outlineVariant, shape),
+            .background(containerColor)
+            .drawBehind {
+                val strokeWidth = GlimpseDp.dp1.toPx()
+                drawLine(
+                    color = topBorderColor,
+                    start = Offset(0f, strokeWidth / 2f),
+                    end = Offset(size.width, strokeWidth / 2f),
+                    strokeWidth = strokeWidth,
+                )
+            },
         decorationBox = { innerTextField ->
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -171,8 +197,25 @@ private fun InputTextFieldPreview() {
                 onValueChange = {},
                 placeholder = "Email address",
             )
+            GlimpsePasswordInputTextField(
+                value = "password123",
+                onValueChange = {},
+                placeholder = "Password",
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun InputTextFieldDarkPreview() {
+    GlimpseTheme(darkTheme = true) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(GlimpseDp.dp24),
+            verticalArrangement = Arrangement.spacedBy(GlimpseDp.dp16),
+        ) {
             GlimpseInputTextField(
-                value = "user@example.com",
+                value = "",
                 onValueChange = {},
                 placeholder = "Email address",
             )
