@@ -40,6 +40,6 @@ object GlimpseDp {
     val dp52 = 52.dp
     val dp54 = 54.dp
     val dp56 = 56.dp
-    val dp116 = 116.dp
+    val dp64 = 64.dp
     val dp240 = 240.dp
 }
