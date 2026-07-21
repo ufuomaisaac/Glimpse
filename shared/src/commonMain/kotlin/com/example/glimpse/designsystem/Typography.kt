@@ -119,7 +119,7 @@ object GlimpseTextStyles {
 
     val labelMedium
         @Composable get() = TextStyle(
-            fontFamily = jetBrainsMonoFontFamily(),
+            fontFamily = interFontFamily(),
             fontWeight = FontWeight.Medium,
             fontSize = GlimpseSp.sp11,
             lineHeight = GlimpseSp.sp11,
@@ -129,7 +129,7 @@ object GlimpseTextStyles {
     val overline
         @Composable get() = TextStyle(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontFamily = spaceGroteskFontFamily(),
+            fontFamily = interFontFamily(),
             fontWeight = FontWeight.SemiBold,
             fontSize = GlimpseSp.sp10,
             lineHeight = GlimpseSp.sp15,

@@ -57,7 +57,7 @@ fun GlimpsePrimaryButton(
     isLoading: Boolean = false,
     enabled: Boolean = true,
 ) {
-    val shape = RoundedCornerShape(GlimpseDp.dp28)
+    val shape = RoundedCornerShape(GlimpseDp.dp12)
 
     Button(
         onClick = onClick,
