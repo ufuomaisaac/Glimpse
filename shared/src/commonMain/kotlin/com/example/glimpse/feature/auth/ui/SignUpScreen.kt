@@ -55,7 +55,7 @@ import glimpse.shared.generated.resources.auth_log_in
 import glimpse.shared.generated.resources.auth_or_with_email
 import glimpse.shared.generated.resources.auth_password
 import glimpse.shared.generated.resources.auth_privacy_policy
-import glimpse.shared.generated.resources.auth_sign_up
+import glimpse.shared.generated.resources.auth_create_account
 import glimpse.shared.generated.resources.auth_terms_of_service
 import glimpse.shared.generated.resources.auth_username
 import glimpse.shared.generated.resources.sign_up_subtitle
@@ -223,7 +223,7 @@ private fun SignUpContent(
         Spacer(Modifier.height(GlimpseDp.dp32))
 
         GlimpsePrimaryButton(
-            text = stringResource(Res.string.auth_sign_up),
+            text = stringResource(Res.string.auth_create_account),
             onClick = { onSignUp(email, password, username) },
             isLoading = isLoading,
             enabled = canSubmit,

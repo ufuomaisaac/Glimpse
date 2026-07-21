@@ -1,5 +1,6 @@
 package com.example.glimpse.feature.auth.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -24,18 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.glimpse.designsystem.AccentPrimary
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseSp
 import com.example.glimpse.designsystem.GlimpseTextStyles
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.designsystem.TextSecondary
+import com.example.glimpse.designsystem.components.GlimpseAccentButton
 import com.example.glimpse.designsystem.components.GlimpseGoogleButton
 import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.designsystem.components.GlimpseLogoText
@@ -44,14 +43,13 @@ import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
+import glimpse.shared.generated.resources.auth_create_an_account
 import glimpse.shared.generated.resources.auth_email
-import glimpse.shared.generated.resources.auth_legal_connector
-import glimpse.shared.generated.resources.auth_legal_prefix
+import glimpse.shared.generated.resources.auth_forgotten_password
+import glimpse.shared.generated.resources.auth_new_here
 import glimpse.shared.generated.resources.auth_or_with_email
 import glimpse.shared.generated.resources.auth_password
-import glimpse.shared.generated.resources.auth_privacy_policy
 import glimpse.shared.generated.resources.auth_sign_in
-import glimpse.shared.generated.resources.auth_terms_of_service
 import glimpse.shared.generated.resources.sign_in_subtitle
 import glimpse.shared.generated.resources.sign_in_title
 import glimpse.shared.generated.resources.sign_in_title_continuation
@@ -62,6 +60,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun SignInScreen(
     onNavigateToSignUp: () -> Unit,
     onSignedIn: () -> Unit,
+    onForgottenPassword: () -> Unit = {},
     viewModel: AuthViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -82,6 +81,8 @@ fun SignInScreen(
         SignInContent(
             onGoogleSignIn = viewModel::continueWithGoogle,
             onSignIn = viewModel::signIn,
+            onCreateAccount = onNavigateToSignUp,
+            onForgottenPassword = onForgottenPassword,
             googleSignInEnabled = uiState !is AuthUiState.Loading,
             isLoading = uiState is AuthUiState.Loading,
             modifier = Modifier.padding(padding),
@@ -93,6 +94,8 @@ fun SignInScreen(
 private fun SignInContent(
     onGoogleSignIn: () -> Unit = {},
     onSignIn: (email: String, password: String) -> Unit = { _, _ -> },
+    onCreateAccount: () -> Unit = {},
+    onForgottenPassword: () -> Unit = {},
     googleSignInEnabled: Boolean = true,
     isLoading: Boolean = false,
     modifier: Modifier = Modifier,
@@ -195,6 +198,14 @@ private fun SignInContent(
             onValueChange = { password = it },
         )
 
+        Spacer(Modifier.height(GlimpseDp.dp12))
+
+        GlimpseAccentButton(
+            text = stringResource(Res.string.auth_forgotten_password),
+            onClick = onForgottenPassword,
+            modifier = Modifier.align(Alignment.End),
+        )
+
         Spacer(Modifier.height(GlimpseDp.dp32))
 
         GlimpsePrimaryButton(
@@ -204,7 +215,24 @@ private fun SignInContent(
             enabled = canSubmit,
         )
 
+        Spacer(Modifier.height(GlimpseDp.dp16))
 
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = stringResource(Res.string.auth_new_here),
+                style = GlimpseTextStyles.bodySmall,
+                fontSize = GlimpseSp.sp12
+            )
+            Spacer(Modifier.width(GlimpseDp.dp4))
+            GlimpseAccentButton(
+                text = stringResource(Res.string.auth_create_an_account),
+                onClick = onCreateAccount,
+            )
+        }
     }
 
 }
