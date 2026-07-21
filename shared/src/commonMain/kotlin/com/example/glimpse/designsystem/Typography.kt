@@ -1,5 +1,6 @@
 package com.example.glimpse.designsystem
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
@@ -122,6 +123,26 @@ object GlimpseTextStyles {
             fontWeight = FontWeight.Medium,
             fontSize = GlimpseSp.sp11,
             lineHeight = GlimpseSp.sp11,
+            letterSpacing = 0.sp,
+        )
+
+    val overline
+        @Composable get() = TextStyle(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontFamily = spaceGroteskFontFamily(),
+            fontWeight = FontWeight.SemiBold,
+            fontSize = GlimpseSp.sp10,
+            lineHeight = GlimpseSp.sp15,
+            letterSpacing = 0.9.sp,
+        )
+
+    val legal
+        @Composable get() = TextStyle(
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontFamily = interFontFamily(),
+            fontWeight = FontWeight.Medium,
+            fontSize = GlimpseSp.sp10,
+            lineHeight = GlimpseSp.sp10,
             letterSpacing = 0.sp,
         )
 }

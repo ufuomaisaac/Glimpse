@@ -16,7 +16,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +45,6 @@ import org.jetbrains.compose.resources.painterResource
 fun GlimpseInputTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -54,7 +52,6 @@ fun GlimpseInputTextField(
     GlimpseBaseInputTextField(
         value = value,
         onValueChange = onValueChange,
-        placeholder = placeholder,
         modifier = modifier,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -65,7 +62,6 @@ fun GlimpseInputTextField(
 fun GlimpsePasswordInputTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -75,7 +71,6 @@ fun GlimpsePasswordInputTextField(
     GlimpseBaseInputTextField(
         value = value,
         onValueChange = onValueChange,
-        placeholder = placeholder,
         modifier = modifier,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -86,7 +81,7 @@ fun GlimpsePasswordInputTextField(
                     painter = painterResource(GlimpseIcons.Eye),
                     contentDescription = "Toggle password visibility",
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(GlimpseDp.dp20),
+                    modifier = Modifier.size(GlimpseDp.dp12),
                 )
             }
         },
@@ -97,7 +92,6 @@ fun GlimpsePasswordInputTextField(
 private fun GlimpseBaseInputTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    placeholder: String,
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -159,13 +153,6 @@ private fun GlimpseBaseInputTextField(
                         .padding(start = GlimpseDp.dp16, end = endPadding),
                     contentAlignment = Alignment.CenterStart,
                 ) {
-                    if (value.isEmpty()) {
-                        Text(
-                            text = placeholder,
-                            color = colors.outline,
-                            style = inputTextStyle,
-                        )
-                    }
                     innerTextField()
                 }
 
@@ -195,12 +182,10 @@ private fun InputTextFieldPreview() {
             GlimpseInputTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = "Email address",
             )
             GlimpsePasswordInputTextField(
                 value = "password123",
                 onValueChange = {},
-                placeholder = "Password",
             )
         }
     }
@@ -217,12 +202,10 @@ private fun InputTextFieldDarkPreview() {
             GlimpseInputTextField(
                 value = "",
                 onValueChange = {},
-                placeholder = "Email address",
             )
             GlimpsePasswordInputTextField(
                 value = "password123",
                 onValueChange = {},
-                placeholder = "Password",
             )
         }
     }

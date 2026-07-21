@@ -7,6 +7,10 @@
     <string name="auth_sign_up">Sign up</string>
     <string name="auth_no_account">Don't have an account?</string>
     <string name="auth_have_account">Already have an account?</string>
+    <string name="auth_log_in">Log in</string>
+    <string name="auth_username">USERNAME</string>
+    <string name="auth_email">EMAIL</string>
+    <string name="auth_password">PASSWORD</string>
     <string name="auth_email_placeholder">Email address</string>
     <string name="auth_username_placeholder">Username</string>
     <string name="auth_password_placeholder">Password</string>
@@ -16,6 +20,10 @@
     <string name="auth_password_hide">Hide</string>
     <string name="auth_google">Google</string>
     <string name="auth_or_with_email">or with email</string>
+    <string name="auth_legal_prefix">By continuing you agree to our </string>
+    <string name="auth_terms_of_service">Terms of Service</string>
+    <string name="auth_legal_connector"> &amp; </string>
+    <string name="auth_privacy_policy">Privacy Policy</string>
 
     <!-- Email verification -->
     <string name="verify_title">Check your email</string>

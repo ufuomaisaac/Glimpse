@@ -22,7 +22,6 @@ import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
 import glimpse.shared.generated.resources.verify_button
-import glimpse.shared.generated.resources.verify_code_placeholder
 import glimpse.shared.generated.resources.verify_subtitle
 import glimpse.shared.generated.resources.verify_title
 import org.jetbrains.compose.resources.stringResource
@@ -93,7 +92,6 @@ private fun EmailVerificationContent(
         GlimpseInputTextField(
             value = code,
             onValueChange = onCodeChange,
-            placeholder = stringResource(Res.string.verify_code_placeholder),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Done,

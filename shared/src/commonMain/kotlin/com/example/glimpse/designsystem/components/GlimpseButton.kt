@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.glimpse.designsystem.GlimpseDp
 import com.example.glimpse.designsystem.GlimpseIcons
 import com.example.glimpse.designsystem.GlimpseTheme
+import com.example.glimpse.designsystem.AccentPrimary
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import com.example.glimpse.designsystem.GlimpseSp
@@ -57,25 +58,24 @@ fun GlimpsePrimaryButton(
     enabled: Boolean = true,
 ) {
     val shape = RoundedCornerShape(GlimpseDp.dp28)
-    val colors = MaterialTheme.colorScheme
 
     Button(
         onClick = onClick,
         enabled = enabled && !isLoading,
         shape = shape,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colors.primary,
-            contentColor = colors.onPrimary,
-            disabledContainerColor = colors.primary.copy(alpha = 0.5f),
-            disabledContentColor = colors.onPrimary.copy(alpha = 0.7f),
+            containerColor = AccentPrimary,
+            contentColor = Color.White,
+            disabledContainerColor = AccentPrimary,
+            disabledContentColor = Color.White,
         ),
         contentPadding = PaddingValues(horizontal = GlimpseDp.dp28, vertical = GlimpseDp.dp16),
         modifier = modifier
             .shadow(
                 elevation = GlimpseDp.dp8,
                 shape = shape,
-                spotColor = colors.primary.copy(alpha = 0.25f),
-                ambientColor = colors.primary.copy(alpha = 0.10f),
+                spotColor = AccentPrimary.copy(alpha = 0.25f),
+                ambientColor = AccentPrimary.copy(alpha = 0.10f),
             )
             .fillMaxWidth()
             .height(GlimpseDp.dp54),
@@ -84,6 +84,7 @@ fun GlimpsePrimaryButton(
                 text = text,
                 style = GlimpseTextStyles.headingH1,
                 fontSize = GlimpseSp.sp16
+
             )
     }
 }
@@ -191,7 +192,8 @@ fun GlimpseAccentButton(
     Text(
         text = text,
         color = MaterialTheme.colorScheme.primary,
-        style = MaterialTheme.typography.labelLarge,
+        style = GlimpseTextStyles.legal,
+        fontSize = GlimpseSp.sp12,
         modifier = modifier
             .semantics { role = Role.Button }
             .clickable(onClick = onClick),

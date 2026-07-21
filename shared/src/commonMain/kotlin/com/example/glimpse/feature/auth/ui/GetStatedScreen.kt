@@ -123,7 +123,6 @@ fun GetStatedScreen(
 
         Spacer(Modifier.height(GlimpseDp.dp8))
 
-
         Text(
             text = stringResource(Res.string.get_stated_no_account_needed_to_receive_photos),
             style = GlimpseTextStyles.bodySmall,
@@ -131,6 +130,8 @@ fun GetStatedScreen(
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth(),
         )
+
+        Spacer(Modifier.height(GlimpseDp.dp32))
     }
 
 
