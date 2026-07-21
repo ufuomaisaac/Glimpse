@@ -15,9 +15,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.glimpse.designsystem.GlimpseDp
+import com.example.glimpse.designsystem.GlimpseSp
+import com.example.glimpse.designsystem.GlimpseTextStyles
 import com.example.glimpse.designsystem.GlimpseTheme
+import com.example.glimpse.designsystem.components.GlimpseLogoText
+import com.example.glimpse.designsystem.components.GlimpseOtpInput
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
-import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.feature.auth.viewmodel.AuthUiState
 import com.example.glimpse.feature.auth.viewmodel.AuthViewModel
 import glimpse.shared.generated.resources.Res
@@ -75,32 +78,43 @@ private fun EmailVerificationContent(
             .fillMaxSize()
             .imePadding()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = GlimpseDp.dp24),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .padding(
+                top = GlimpseDp.dp116,
+                start = GlimpseDp.dp16,
+                end = GlimpseDp.dp16,
+            ),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start,
     ) {
-        Text(stringResource(Res.string.verify_title), style = MaterialTheme.typography.headlineMedium)
-        Spacer(Modifier.height(GlimpseDp.dp8))
+        GlimpseLogoText()
+
+        Spacer(Modifier.height(GlimpseDp.dp24))
+
         Text(
-            stringResource(Res.string.verify_subtitle, email),
-            style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
+            text = stringResource(Res.string.verify_title),
+            style = GlimpseTextStyles.headingH3,
+            fontSize = GlimpseSp.sp24,
+        )
+
+        Spacer(Modifier.height(GlimpseDp.dp8))
+
+        Text(
+            text = stringResource(Res.string.verify_subtitle, email),
+            style = GlimpseTextStyles.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
         Spacer(Modifier.height(GlimpseDp.dp32))
 
-        GlimpseInputTextField(
+        GlimpseOtpInput(
             value = code,
             onValueChange = onCodeChange,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Done,
-            ),
             keyboardActions = KeyboardActions(
                 onDone = { if (code.length == 6 && !isLoading) onVerify() },
             ),
         )
-        Spacer(Modifier.height(GlimpseDp.dp24))
+
+        Spacer(Modifier.height(GlimpseDp.dp32))
 
         GlimpsePrimaryButton(
             text = stringResource(Res.string.verify_button),
@@ -150,6 +164,20 @@ private fun EmailVerificationLoadingPreview() {
             email = "user@example.com",
             onCodeChange = {},
             isLoading = true,
+            onVerify = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EmailVerificationDarkPreview() {
+    GlimpseTheme(darkTheme = true) {
+        EmailVerificationContent(
+            code = "123456",
+            email = "user@example.com",
+            onCodeChange = {},
+            isLoading = false,
             onVerify = {},
         )
     }
