@@ -3,7 +3,6 @@
     <style name="Theme.Glimpse.Launcher" parent="Theme.Glimpse">
         <item name="android:windowSplashScreenBackground">@color/glimpse_background</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
         <item name="android:windowBackground">@color/glimpse_background</item>
     </style>
 </resources>

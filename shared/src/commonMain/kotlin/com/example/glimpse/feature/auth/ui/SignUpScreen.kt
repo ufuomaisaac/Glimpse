@@ -267,7 +267,7 @@ private fun SignUpContent(
             )
         }
 
-        Spacer(Modifier.height(GlimpseDp.dp32))
+        Spacer(Modifier.height(GlimpseDp.dp64))
 
     }
 }

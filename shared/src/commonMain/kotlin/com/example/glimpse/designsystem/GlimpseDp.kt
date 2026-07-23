@@ -3,6 +3,7 @@ package com.example.glimpse.designsystem
 import androidx.compose.ui.unit.dp
 
 object GlimpseDp {
+
     val dp0 = 0.dp
     val dp1 = 1.dp
     val dp2 = 2.dp
@@ -41,5 +42,7 @@ object GlimpseDp {
     val dp54 = 54.dp
     val dp56 = 56.dp
     val dp64 = 64.dp
+
+    val dp116 = 116.dp
     val dp240 = 240.dp
 }
