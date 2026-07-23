@@ -9,5 +9,7 @@
         <item name="android:navigationBarColor">@color/glimpse_background</item>
     </style>
 
-    <style name="Theme.Glimpse.Launcher" parent="Theme.Glimpse" />
+    <style name="Theme.Glimpse.Launcher" parent="Theme.Glimpse">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
 </resources>
