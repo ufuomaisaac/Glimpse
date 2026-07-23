@@ -124,7 +124,7 @@ fun GlimpseGoogleButton(
     enabled: Boolean = true,
 ) {
     val colors = MaterialTheme.colorScheme
-    val shape = RoundedCornerShape(GlimpseDp.dp28)
+    val shape = RoundedCornerShape(GlimpseDp.dp16)
     val isDarkTheme = colors.background.luminance() < 0.5f
     val containerColor = if (isDarkTheme) colors.surface else colors.background
     val topBorderColor = Color(0x260F172A)

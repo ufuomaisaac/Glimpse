@@ -11,7 +11,6 @@ import glimpse.shared.generated.resources.images
 import glimpse.shared.generated.resources.link
 import glimpse.shared.generated.resources.logo_badge
 import glimpse.shared.generated.resources.lock
-import glimpse.shared.generated.resources.scan_face
 import glimpse.shared.generated.resources.settings
 import glimpse.shared.generated.resources.upload_cloud
 import glimpse.shared.generated.resources.shield_light
@@ -31,7 +30,6 @@ import org.jetbrains.compose.resources.DrawableResource
 object GlimpseIcons {
     val LogoBadge: DrawableResource get() = Res.drawable.logo_badge
     val UploadCloud: DrawableResource get() = Res.drawable.upload_cloud
-    val ScanFace: DrawableResource get() = Res.drawable.scan_face
     val Link: DrawableResource get() = Res.drawable.link
     val Images: DrawableResource get() = Res.drawable.images
     val Copy: DrawableResource get() = Res.drawable.copy

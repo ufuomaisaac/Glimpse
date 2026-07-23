@@ -11,18 +11,15 @@
         android:translateY="28.5">
         <path
             android:pathData="M23.8,10.88C21,8.16 16.8,7.48 13.3,9.52C9.1,11.9 7.7,17 9.8,21.08C12.25,25.16 17.5,26.52 21.7,24.48C24.5,22.78 25.9,19.72 25.9,17"
-            android:strokeColor="@color/glimpse_text_primary"
+            android:strokeColor="#FFFFFFFF"
             android:strokeWidth="7"
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
         <path
             android:pathData="M18.2,17H25.9"
-            android:strokeColor="#10B981"
+            android:strokeColor="#FFFFFFFF"
             android:strokeWidth="7"
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
-        <path
-            android:fillColor="#10B981"
-            android:pathData="M17.5,18.53C18.3699,18.53 19.075,17.845 19.075,17C19.075,16.155 18.3699,15.47 17.5,15.47C16.6302,15.47 15.925,16.155 15.925,17C15.925,17.845 16.6302,18.53 17.5,18.53Z" />
     </group>
 </vector>
