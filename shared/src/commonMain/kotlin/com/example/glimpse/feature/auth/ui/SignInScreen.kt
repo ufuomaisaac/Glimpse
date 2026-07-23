@@ -232,6 +232,8 @@ private fun SignInContent(
                 text = stringResource(Res.string.auth_create_an_account),
                 onClick = onCreateAccount,
             )
+
+            Spacer(Modifier.height(GlimpseDp.dp64))
         }
     }
 

@@ -34,9 +34,11 @@ class ClerkAndroidAuthRepository(
 
     override suspend fun signIn(email: String, password: String): ScreenState<Unit> {
         ensureClerkReady()?.let { return ScreenState.Error(it) }
+        val submittedEmail = email
+        val submittedPassword = password
         return when (val result = Clerk.auth.signInWithPassword {
-            identifier = email
-            this.password = password
+            identifier = submittedEmail
+            this.password = submittedPassword
         }) {
             is ClerkResult.Success -> {
                 Log.d(TAG, "signIn success: id=${result.value.id}, status=${result.value.status}, createdSessionId=${result.value.createdSessionId}")
@@ -65,10 +67,13 @@ class ClerkAndroidAuthRepository(
 
     override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> {
         ensureClerkReady()?.let { return ScreenState.Error(it) }
+        val submittedEmail = email
+        val submittedPassword = password
+        val submittedUsername = username
         return when (val result = Clerk.auth.signUp {
-            this.email = email
-            this.password = password
-            this.username = username
+            this.email = submittedEmail
+            this.password = submittedPassword
+            this.username = submittedUsername
         }) {
             is ClerkResult.Success -> {
                 Log.d(TAG, "signUp success: id=${result.value.id}, status=${result.value.status}, unverified=${result.value.unverifiedFields}, missing=${result.value.missingFields}, createdSessionId=${result.value.createdSessionId}")
