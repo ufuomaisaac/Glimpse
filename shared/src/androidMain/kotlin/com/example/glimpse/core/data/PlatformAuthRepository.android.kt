@@ -6,4 +6,5 @@ import com.example.glimpse.core.network.service.AuthApiService
 actual fun createPlatformAuthRepository(
     authApiService: AuthApiService,
     tokenStorage: TokenStorage,
-): AuthRepository = ClerkAndroidAuthRepository(tokenStorage)
+    userRepository: UserRepository,
+): AuthRepository = ClerkAndroidAuthRepository(tokenStorage, userRepository)

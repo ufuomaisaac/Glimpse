@@ -6,6 +6,7 @@ import com.example.glimpse.core.network.ClerkConfig
 import com.example.glimpse.core.data.storage.storageModule
 import com.example.glimpse.core.network.di.networkModule
 import com.example.glimpse.feature.auth.di.authModule
+import com.example.glimpse.feature.upload.di.uploadModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -22,6 +23,7 @@ class GlimpseApp : Application() {
                 storageModule,
                 networkModule,
                 authModule,
+                uploadModule,
             )
         }
     }

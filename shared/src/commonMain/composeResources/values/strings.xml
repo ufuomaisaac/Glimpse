@@ -51,6 +51,12 @@
     <string name="get_stated_have_account">I already have an account</string>
     <string name="get_stated_no_account_needed_to_receive_photos">No account needed to receive photos</string>
 
+    <!-- First event -->
+    <string name="create_first_event_welcome">Welcome, %1$s</string>
+    <string name="create_first_event_subtitle">Upload your event photos and share your personalized links instantly.</string>
+    <string name="create_first_event_button">Create your First Event</string>
+    <string name="create_first_event_image_description">Event photo %1$d of %2$d</string>
+
     <!-- Sign Up -->
     <string name="sign_up_title">Every guest gets </string>
     <string name="sign_up_title_continuation">their photos.</string>

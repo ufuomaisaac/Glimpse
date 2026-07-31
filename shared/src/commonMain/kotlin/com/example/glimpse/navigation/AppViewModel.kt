@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class AppViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class AppViewModel(
+    private val authRepository: AuthRepository,
+) : ViewModel() {
 
     private val _startDestination = MutableStateFlow<Any?>(null)
     val startDestination: StateFlow<Any?> = _startDestination.asStateFlow()

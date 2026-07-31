@@ -6,4 +6,5 @@ import com.example.glimpse.core.network.service.AuthApiService
 actual fun createPlatformAuthRepository(
     authApiService: AuthApiService,
     tokenStorage: TokenStorage,
-): AuthRepository = AuthRepositoryImpl(authApiService, tokenStorage)
+    userRepository: UserRepository,
+): AuthRepository = AuthRepositoryImpl(authApiService, tokenStorage, userRepository)

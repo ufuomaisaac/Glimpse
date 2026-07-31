@@ -6,4 +6,5 @@ import com.example.glimpse.core.network.service.AuthApiService
 expect fun createPlatformAuthRepository(
     authApiService: AuthApiService,
     tokenStorage: TokenStorage,
+    userRepository: UserRepository,
 ): AuthRepository
