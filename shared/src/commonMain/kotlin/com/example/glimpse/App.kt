@@ -15,7 +15,9 @@ import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
 import com.example.glimpse.feature.upload.navigation.CreateFirstEventDestination
+import com.example.glimpse.feature.upload.navigation.CreateEventDestination
 import com.example.glimpse.feature.upload.navigation.createFirstEventDestination
+import com.example.glimpse.feature.upload.navigation.createEventDestination
 import com.example.glimpse.navigation.AppViewModel
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -46,11 +48,17 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                 )
                 createFirstEventDestination(
                     onCreateEvent = {
-                        // Connect the event details route here.
+                        navController.navigate(CreateEventDestination)
+                    },
+                )
+                createEventDestination(
+                    onBack = { navController.popBackStack() },
+                    onUploadRequest = { _, _ ->
+                        // Connect the documented presigned-upload response here.
                     },
                 )
                 composable<MainGraph> {
-                    StartupBackground()
+                    //StartupBackground()
                 }
             }
         }

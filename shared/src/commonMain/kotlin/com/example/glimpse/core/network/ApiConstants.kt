@@ -1,7 +1,7 @@
 package com.example.glimpse.core.network
 
 internal object ApiEndPoints {
-    const val BASE_URL = "http://localhost:8080/api/v1/"
+    const val BASE_URL = "https://unadventurous-marsh.outray.app/"
 
     const val GET_ALL_UPLOADS            = "/uploads"
     const val CREATE_UPLOAD              = "/uploads"

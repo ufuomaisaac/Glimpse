@@ -25,6 +25,7 @@ import glimpse.shared.generated.resources.google_dark
 import glimpse.shared.generated.resources.eye_dark
 import glimpse.shared.generated.resources.boost_dark
 import glimpse.shared.generated.resources.apple_dark
+import glimpse.shared.generated.resources.arrow_back
 import org.jetbrains.compose.resources.DrawableResource
 
 object GlimpseIcons {
@@ -35,6 +36,7 @@ object GlimpseIcons {
     val Copy: DrawableResource get() = Res.drawable.copy
     val Check: DrawableResource get() = Res.drawable.check
     val Close: DrawableResource get() = Res.drawable.close
+    val ArrowBack: DrawableResource get() = Res.drawable.arrow_back
     val Download: DrawableResource get() = Res.drawable.download
     val Lock: DrawableResource get() = Res.drawable.lock
     val Eye: DrawableResource get() = Res.drawable.eye
