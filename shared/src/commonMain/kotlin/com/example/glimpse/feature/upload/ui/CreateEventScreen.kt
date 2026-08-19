@@ -3,6 +3,8 @@ package com.example.glimpse.feature.upload.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.glimpse.designsystem.*
+import com.example.glimpse.designsystem.components.GlimpseChip
 import com.example.glimpse.designsystem.components.GlimpseInputTextField
 import com.example.glimpse.designsystem.components.GlimpsePrimaryButton
 import com.example.glimpse.feature.upload.model.SelectedPhoto
@@ -53,6 +56,7 @@ fun CreateEventRoute(
         CreateEventScreen(
             state = state,
             onEventNameChange = viewModel::updateEventName,
+            onExpirationDaysChange = viewModel::updateExpirationDays,
             onAddPhotos = picker::launch,
             onRemovePhoto = viewModel::removePhoto,
             onBack = onBack,
@@ -66,6 +70,7 @@ fun CreateEventRoute(
 fun CreateEventScreen(
     state: CreateEventUiState,
     onEventNameChange: (String) -> Unit,
+    onExpirationDaysChange: (Int) -> Unit,
     onAddPhotos: () -> Unit,
     onRemovePhoto: (String) -> Unit,
     onBack: () -> Unit,
@@ -114,6 +119,23 @@ fun CreateEventScreen(
                 style = GlimpseTextStyles.legal,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Spacer(Modifier.height(GlimpseDp.dp24))
+            Text("Link expires after", style = GlimpseTextStyles.overline)
+            Spacer(Modifier.height(GlimpseDp.dp8))
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(GlimpseDp.dp10),
+            ) {
+                items(
+                    items = EXPIRATION_OPTIONS,
+                    key = { it },
+                ) { days ->
+                    GlimpseChip(
+                        text = "$days days",
+                        selected = state.expirationDays == days,
+                        onClick = { onExpirationDaysChange(days) },
+                    )
+                }
+            }
             Spacer(Modifier.height(GlimpseDp.dp24))
             AddPhotosCard(onAddPhotos)
 
@@ -270,19 +292,26 @@ private fun formatBytes(bytes: Long) = when {
     else -> "$bytes B"
 }
 
+private val EXPIRATION_OPTIONS = listOf(7, 14, 30)
+
 @Preview(showBackground = true, widthDp = 360, heightDp = 800)
 @Composable
 private fun CreateEventPreview() {
     GlimpseTheme {
         CreateEventScreen(
-            CreateEventUiState(
-                "Ada & Tobi's wedding",
-                listOf(
+            state = CreateEventUiState(
+                eventName = "Ada & Tobi's wedding",
+                photos = listOf(
                     SelectedPhoto("1", "IMG_2048.jpg", 2_400_000, byteArrayOf()),
                     SelectedPhoto("2", "ceremony.jpg", 1_800_000, byteArrayOf()),
                 ),
             ),
-            {}, {}, {}, {}, {},
+            onEventNameChange = {},
+            onExpirationDaysChange = {},
+            onAddPhotos = {},
+            onRemovePhoto = {},
+            onBack = {},
+            onUpload = {},
         )
     }
 }

@@ -3,6 +3,7 @@ package com.example.glimpse.designsystem
 import androidx.compose.ui.unit.sp
 
 object GlimpseSp {
+    val sp0 = 0.sp
     val sp10 = 10.sp
     val sp11 = 11.sp
     val sp12 = 12.sp

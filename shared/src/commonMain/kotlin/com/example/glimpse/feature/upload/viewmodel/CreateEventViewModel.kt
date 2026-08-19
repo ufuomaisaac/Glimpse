@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 data class CreateEventUiState(
     val eventName: String = "",
     val photos: List<SelectedPhoto> = emptyList(),
+    val expirationDays: Int = 7,
     val errorMessage: String? = null,
 ) {
     val canUpload: Boolean
@@ -25,6 +26,10 @@ class CreateEventViewModel : ViewModel() {
 
     fun updateEventName(value: String) {
         _uiState.update { it.copy(eventName = value.take(MAX_EVENT_NAME_LENGTH)) }
+    }
+
+    fun updateExpirationDays(days: Int) {
+        _uiState.update { it.copy(expirationDays = days) }
     }
 
     fun addPhotos(photos: List<SelectedPhoto>) {

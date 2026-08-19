@@ -36,12 +36,15 @@ class UploadApiService(private val client: HttpClient) {
     suspend fun deleteUpload(id: String): HttpResponse =
         client.delete(ApiEndPoints.deleteUpload(id))
 
-    suspend fun createUpload(name: String, expiresAt: String): HttpResponse {
-        return client.post(ApiEndPoints.CREATE_UPLOAD) {
+    suspend fun createUpload(
+        name: String,
+        expiresAt: String,
+        fileNames: List<String>,
+    ): HttpResponse =
+        client.post(ApiEndPoints.CREATE_UPLOAD_WITH_FILES) {
             contentType(ContentType.Application.Json)
-            setBody(CreateUploadRequest(name, expiresAt))
+            setBody(CreateUploadRequest(name, expiresAt, fileNames.map(::FileRequest)))
         }
-    }
 
     suspend fun updateUpload(uploadId: String, name: String, expiresAt: String): HttpResponse {
         return client.patch(ApiEndPoints.updateUpload(uploadId)) {
@@ -56,11 +59,6 @@ class UploadApiService(private val client: HttpClient) {
             setBody(CompleteUploadRequest(keys.map { FileKeyRequest(it) }))
         }
 
-    suspend fun getPresignedUrls(uploadId: String, fileNames: List<String>): HttpResponse =
-        client.post(ApiEndPoints.getPresignedUrls(uploadId)) {
-            contentType(ContentType.Application.Json)
-            setBody(GetPresignedUrlsRequest(fileNames.map { FileRequest(it) }))
-        }
 
     suspend fun uploadPhotos(
         presignedUrls: List<String>,
@@ -82,7 +80,11 @@ class UploadApiService(private val client: HttpClient) {
     }
 
     @Serializable
-    private data class CreateUploadRequest(val name: String, val expiresAt: String)
+    private data class CreateUploadRequest(
+        val name: String,
+        val expiresAt: String,
+        val files: List<FileRequest>,
+    )
 
     @Serializable
     private data class UpdateUploadRequest(val name: String, val expiresAt: String)
@@ -92,9 +94,6 @@ class UploadApiService(private val client: HttpClient) {
 
     @Serializable
     private data class FileKeyRequest(val key: String)
-
-    @Serializable
-    private data class GetPresignedUrlsRequest(val files: List<FileRequest>)
 
     @Serializable
     private data class FileRequest(val name: String)
