@@ -20,6 +20,7 @@ import kotlinx.serialization.Serializable
 fun NavGraphBuilder.authGraph(
     navController: NavController,
     onNavigateToMain: () -> Unit,
+    onFirstAuthentication: () -> Unit,
 ) {
     navigation<AuthGraph>(startDestination = GetStated) {
         composable<GetStated> {
@@ -53,7 +54,7 @@ fun NavGraphBuilder.authGraph(
                         popUpTo(SignUp) { inclusive = true }
                     }
                 },
-                onSignedIn = onNavigateToMain,
+                onSignedIn = onFirstAuthentication,
             )
         }
         composable<EmailVerification> { backStackEntry ->
@@ -61,7 +62,7 @@ fun NavGraphBuilder.authGraph(
             EmailVerificationScreen(
                 signUpId = route.signUpId,
                 email = route.email,
-                onVerified = onNavigateToMain,
+                onVerified = onFirstAuthentication,
             )
         }
     }

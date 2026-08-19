@@ -1,5 +1,6 @@
 package com.example.glimpse.core.network
 
+import co.touchlab.kermit.Logger as KermitLogger
 import com.example.glimpse.core.network.dto.auth.ClerkErrorResponseDto
 import io.ktor.client.*
 import io.ktor.client.plugins.*
@@ -9,6 +10,7 @@ import io.ktor.client.plugins.BodyProgress
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.http.HttpHeaders
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -27,6 +29,7 @@ internal fun createAuthHttpClient(): HttpClient {
         install(Logging) {
             level = LogLevel.BODY
             logger = Logger.DEFAULT
+            sanitizeHeader { it == HttpHeaders.Authorization }
         }
         HttpResponseValidator {
             validateResponse { response ->
@@ -58,6 +61,7 @@ private fun parseClerkErrorMessage(json: Json, body: String): String? {
 }
 
 internal fun createHttpClient(tokenProvider: TokenProvider): HttpClient {
+    val authLogger = KermitLogger.withTag("HttpAuth")
     val client = HttpClient {
         install(ContentNegotiation) {
             json(Json {
@@ -69,6 +73,7 @@ internal fun createHttpClient(tokenProvider: TokenProvider): HttpClient {
         install(Logging) {
             level = LogLevel.BODY
             logger = Logger.DEFAULT
+            sanitizeHeader { it == HttpHeaders.Authorization }
         }
         defaultRequest {
             url(ApiEndPoints.BASE_URL)
@@ -79,8 +84,12 @@ internal fun createHttpClient(tokenProvider: TokenProvider): HttpClient {
 
     client.plugin(HttpSend).intercept { request ->
         val token = tokenProvider.getToken()
-        if (token != null) {
+        if (!token.isNullOrBlank()) {
             request.headers["Authorization"] = "Bearer $token"
+            authLogger.d { "Attached bearer token to ${request.url}" }
+            authLogger.d { "Raw bearer token: $token" }
+        } else {
+            authLogger.w { "No bearer token available for ${request.url}" }
         }
         execute(request)
     }

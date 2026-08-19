@@ -13,13 +13,7 @@ class ClusterApiService(private val client: HttpClient) {
     suspend fun getClusters(): List<ClusterDto> =
         client.get(ApiEndPoints.GET_RECEIVED_CLUSTER).body()
 
-    suspend fun getReceivedClusterById(id: String): ClusterDto =
-        client.get(ApiEndPoints.getReceivedClusterById(id)).body()
-
     suspend fun getGeneratedCluster(): List<ClusterDto> =
         client.get(ApiEndPoints.GENERATED_CLUSTER).body()
-
-    suspend fun createLink(clusterId: String): ShareLinkDto =
-        client.post(ApiEndPoints.clusterLinks(clusterId)).body()
 
 }

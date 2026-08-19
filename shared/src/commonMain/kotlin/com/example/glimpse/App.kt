@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.example.glimpse.designsystem.Background
-import com.example.glimpse.designsystem.GlimpseTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,6 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.glimpse.designsystem.GlimpseTheme
 import com.example.glimpse.feature.auth.navigation.AuthGraph
 import com.example.glimpse.feature.auth.navigation.authGraph
+import com.example.glimpse.feature.upload.navigation.CreateFirstEventDestination
+import com.example.glimpse.feature.upload.navigation.CreateEventDestination
+import com.example.glimpse.feature.upload.navigation.createFirstEventDestination
+import com.example.glimpse.feature.upload.navigation.createEventDestination
 import com.example.glimpse.navigation.AppViewModel
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
@@ -37,9 +40,22 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                             popUpTo(AuthGraph) { inclusive = true }
                         }
                     },
+                    onFirstAuthentication = {
+                        navController.navigate(CreateFirstEventDestination) {
+                            popUpTo(AuthGraph) { inclusive = true }
+                        }
+                    },
+                )
+                createFirstEventDestination(
+                    onCreateEvent = {
+                        navController.navigate(CreateEventDestination)
+                    },
+                )
+                createEventDestination(
+                    onBack = { navController.popBackStack() },
                 )
                 composable<MainGraph> {
-                    StartupBackground()
+                    //StartupBackground()
                 }
             }
         }

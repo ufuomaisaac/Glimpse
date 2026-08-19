@@ -1,0 +1,12 @@
+--- shared/src/commonMain/kotlin/com/example/glimpse/feature/upload/viewmodel/CreateEventViewModel.kt
++++ shared/src/commonMain/kotlin/com/example/glimpse/feature/upload/viewmodel/CreateEventViewModel.kt
+@@ -17,7 +17,8 @@
+     val eventName: String = "",
+     val photos: List<SelectedPhoto> = emptyList(),
+     val expirationDays: Int = 7,
++    val isUploading: Boolean = false,
+     val errorMessage: String? = null,
+ ) {
+     val canUpload: Boolean
+-        get() = eventName.isNotBlank() && photos.isNotEmpty()
++        get() = eventName.isNotBlank() && photos.isNotEmpty() && !isUploading

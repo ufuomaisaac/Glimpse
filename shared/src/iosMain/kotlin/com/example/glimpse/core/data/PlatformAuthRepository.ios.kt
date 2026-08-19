@@ -8,12 +8,18 @@ import com.example.glimpse.core.network.service.AuthApiService
 actual fun createPlatformAuthRepository(
     authApiService: AuthApiService,
     tokenStorage: TokenStorage,
-): AuthRepository = IosClerkBridgeRequiredAuthRepository(tokenStorage)
+    userRepository: UserRepository,
+): AuthRepository = IosClerkBridgeRequiredAuthRepository(tokenStorage, userRepository)
 
 private class IosClerkBridgeRequiredAuthRepository(
     private val tokenStorage: TokenStorage,
+    private val userRepository: UserRepository,
 ) : AuthRepository {
-    override suspend fun isSignedIn(): Boolean = tokenStorage.getToken() != null
+    override suspend fun isSignedIn(): Boolean {
+        val signedIn = tokenStorage.getToken() != null
+        if (signedIn) userRepository.restore()
+        return signedIn
+    }
 
     override suspend fun signIn(email: String, password: String): ScreenState<Unit> =
         ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
@@ -29,6 +35,7 @@ private class IosClerkBridgeRequiredAuthRepository(
 
     override suspend fun signOut(): ScreenState<Unit> {
         tokenStorage.clearToken()
+        userRepository.clearUser()
         return ScreenState.Success(Unit)
     }
 }

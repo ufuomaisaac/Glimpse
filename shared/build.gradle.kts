@@ -73,6 +73,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.clerk.android.api)
+            implementation(libs.androidx.activity.compose)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.koin.android)
             implementation(libs.ktor.client.okhttp)

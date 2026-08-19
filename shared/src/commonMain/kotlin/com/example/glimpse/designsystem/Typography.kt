@@ -75,7 +75,7 @@ object GlimpseTextStyles {
     val headingH2
         @Composable get() = TextStyle(
             fontFamily = spaceGroteskFontFamily(),
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Normal,
             fontSize = GlimpseSp.sp24,
             lineHeight = GlimpseSp.sp24,
             letterSpacing = 0.sp,

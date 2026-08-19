@@ -76,7 +76,7 @@ fun SignUpScreen(
 
     LaunchedEffect(uiState) {
         when (val state = uiState) {
-            is AuthUiState.SignedIn -> onSignedIn()
+            AuthUiState.SignedIn -> onSignedIn()
             is AuthUiState.AwaitingEmailVerification -> {
                 viewModel.clearError()
                 onNavigateToEmailVerification(state.signUpId, state.email)

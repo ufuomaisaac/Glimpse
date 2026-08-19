@@ -6,5 +6,6 @@ import org.koin.dsl.module
 actual val storageModule = module {
     single { DataStoreTokenStorage() }
     single<TokenStorage> { get<DataStoreTokenStorage>() }
+    single<UserStorage> { get<DataStoreTokenStorage>() }
     single<TokenProvider> { get<DataStoreTokenStorage>() }
 }

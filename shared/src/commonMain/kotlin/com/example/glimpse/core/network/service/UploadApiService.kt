@@ -1,5 +1,6 @@
 package com.example.glimpse.core.network.service
 
+import co.touchlab.kermit.Logger
 import com.example.glimpse.core.model.UploadStatus
 import com.example.glimpse.core.network.ApiEndPoints
 import com.example.glimpse.core.network.dto.PaginatedUploadsDto
@@ -11,8 +12,12 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class UploadApiService(private val client: HttpClient) {
+
+    private val logger = Logger.withTag("UploadApiService")
 
     suspend fun getAllUploads(
         page: Int? = null,
@@ -36,10 +41,32 @@ class UploadApiService(private val client: HttpClient) {
     suspend fun deleteUpload(id: String): HttpResponse =
         client.delete(ApiEndPoints.deleteUpload(id))
 
-    suspend fun createUpload(name: String, expiresAt: String): HttpResponse {
-        return client.post(ApiEndPoints.CREATE_UPLOAD) {
-            contentType(ContentType.Application.Json)
-            setBody(CreateUploadRequest(name, expiresAt))
+    suspend fun upload(
+        name: String,
+        expiresAt: String,
+        fileNames: List<String>,
+    ): HttpResponse {
+        val endpoint = ApiEndPoints.UPLOAD_WITH_FILES
+        val requestBody = UploadRequest(name, expiresAt, fileNames.map(::FileRequest))
+
+        logger.i {
+            "Upload request: method=POST, endpoint=$endpoint, body=${Json.encodeToString(requestBody)}"
+        }
+
+        return try {
+            client.post(endpoint) {
+                contentType(ContentType.Application.Json)
+                setBody(requestBody)
+            }.also { response ->
+                logger.i {
+                    "POST $endpoint reached server; response status=${response.status.value}"
+                }
+            }
+        } catch (exception: Exception) {
+            logger.e(exception) {
+                "POST $endpoint failed before receiving a response"
+            }
+            throw exception
         }
     }
 
@@ -56,11 +83,6 @@ class UploadApiService(private val client: HttpClient) {
             setBody(CompleteUploadRequest(keys.map { FileKeyRequest(it) }))
         }
 
-    suspend fun getPresignedUrls(uploadId: String, fileNames: List<String>): HttpResponse =
-        client.post(ApiEndPoints.getPresignedUrls(uploadId)) {
-            contentType(ContentType.Application.Json)
-            setBody(GetPresignedUrlsRequest(fileNames.map { FileRequest(it) }))
-        }
 
     suspend fun uploadPhotos(
         presignedUrls: List<String>,
@@ -82,7 +104,11 @@ class UploadApiService(private val client: HttpClient) {
     }
 
     @Serializable
-    private data class CreateUploadRequest(val name: String, val expiresAt: String)
+    private data class UploadRequest(
+        val name: String,
+        val expiresAt: String,
+        val files: List<FileRequest>,
+    )
 
     @Serializable
     private data class UpdateUploadRequest(val name: String, val expiresAt: String)
@@ -92,9 +118,6 @@ class UploadApiService(private val client: HttpClient) {
 
     @Serializable
     private data class FileKeyRequest(val key: String)
-
-    @Serializable
-    private data class GetPresignedUrlsRequest(val files: List<FileRequest>)
 
     @Serializable
     private data class FileRequest(val name: String)
