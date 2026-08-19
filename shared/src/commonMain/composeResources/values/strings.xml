@@ -58,8 +58,8 @@
     <string name="create_first_event_image_description">Event photo %1$d of %2$d</string>
 
     <!-- Create event -->
-    <string name="create_event_title">Create a new event</string>
-    <string name="create_event_subtitle">Give your event a name, then add the photos you want Glimpse to sort by face.</string>
+    <string name="create_event_title">New event</string>
+    <string name="create_event_subtitle">Set up your upload session</string>
     <string name="create_event_event_name">EVENT NAME</string>
     <string name="create_event_event_name_hint">Guests will see this name when you share their gallery.</string>
     <string name="create_event_add_photos">Add photos</string>
@@ -70,6 +70,7 @@
     </plurals>
     <string name="create_event_remove_photo">Remove %1$s</string>
     <string name="create_event_privacy">Your originals upload directly to private R2 storage. Sorting starts after every photo is uploaded.</string>
+    <string name="create_event_uploading">Creating upload…</string>
     <string name="create_event_upload_button">Upload &amp; sort %1$d photos</string>
 
     <!-- Sign Up -->

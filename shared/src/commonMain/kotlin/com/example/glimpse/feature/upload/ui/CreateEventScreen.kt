@@ -2,6 +2,7 @@ package com.example.glimpse.feature.upload.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -17,6 +18,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +35,7 @@ import glimpse.shared.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -52,7 +55,10 @@ fun CreateEventRoute(
         }
     }
 
-    Scaffold(snackbarHost = { SnackbarHost(snackbar) }) { padding ->
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbar) },
+        contentWindowInsets = WindowInsets(0),
+    ) { padding ->
         CreateEventScreen(
             state = state,
             onEventNameChange = viewModel::updateEventName,
@@ -86,7 +92,7 @@ fun CreateEventScreen(
         contentAlignment = Alignment.TopCenter,
     ) {
         Column(
-            Modifier.fillMaxSize().widthIn(max = 560.dp).imePadding()
+            Modifier.widthIn(max = 560.dp).fillMaxSize().imePadding()
                 .verticalScroll(rememberScrollState()).padding(horizontal = GlimpseDp.dp16),
         ) {
             Row(
@@ -100,29 +106,29 @@ fun CreateEventScreen(
                     )
                 }
                 Spacer(Modifier.size(GlimpseDp.dp8))
-                Text(
-                    text = stringResource(Res.string.create_event_title),
-                    style = GlimpseTextStyles.headingH1,
-                    fontSize = GlimpseSp.sp18,
-                )
+                Column(
+                    modifier = Modifier,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = stringResource(Res.string.create_event_title),
+                        style = GlimpseTextStyles.headingH1,
+                        fontSize = GlimpseSp.sp20,
+                    )
+                    Text(
+                        text = stringResource(Res.string.create_event_subtitle),
+                        style = GlimpseTextStyles.labelMedium,
+                        fontSize = GlimpseSp.sp10
+                    )
+                }
+
             }
 
-            Spacer(Modifier.height(GlimpseDp.dp24))
-            Text(
-                stringResource(Res.string.create_event_subtitle),
-                style = GlimpseTextStyles.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
             Spacer(Modifier.height(GlimpseDp.dp32))
-            Text(stringResource(Res.string.create_event_event_name), style = GlimpseTextStyles.overline)
+            Text(stringResource(Res.string.create_event_event_name), style = GlimpseTextStyles.headingH2, fontSize = GlimpseSp.sp11)
             Spacer(Modifier.height(GlimpseDp.dp8))
             GlimpseInputTextField(state.eventName, onEventNameChange)
             Spacer(Modifier.height(GlimpseDp.dp4))
-            Text(
-                stringResource(Res.string.create_event_event_name_hint),
-                style = GlimpseTextStyles.legal,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
             Spacer(Modifier.height(GlimpseDp.dp24))
             Text("Link expires after", style = GlimpseTextStyles.overline)
             Spacer(Modifier.height(GlimpseDp.dp8))
@@ -163,46 +169,31 @@ fun CreateEventScreen(
                     )
                 }
                 Spacer(Modifier.height(GlimpseDp.dp8))
-                Column(
-                    Modifier.fillMaxWidth().clip(RoundedCornerShape(GlimpseDp.dp16))
-                        .background(MaterialTheme.colorScheme.surface),
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(GlimpseDp.dp12),
                 ) {
-                    state.photos.forEachIndexed { index, photo ->
-                        PhotoRow(photo) { onRemovePhoto(photo.id) }
-                        if (index != state.photos.lastIndex) {
-                            HorizontalDivider(
-                                color = MaterialTheme.colorScheme.outlineVariant,
-                                modifier = Modifier.padding(horizontal = GlimpseDp.dp16),
-                            )
+                    items(
+                        items = state.photos,
+                        key = SelectedPhoto::id,
+                    ) { photo ->
+                        PhotoCard(photo) {
+                            onRemovePhoto(photo.id)
                         }
                     }
                 }
             }
 
-            Spacer(Modifier.height(GlimpseDp.dp24))
-            Row(
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(GlimpseDp.dp12))
-                    .background(MaterialTheme.colorScheme.primaryContainer)
-                    .padding(GlimpseDp.dp16),
-                verticalAlignment = Alignment.Top,
-            ) {
-                Icon(
-                    painterResource(GlimpseIcons.ShieldLight),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(GlimpseDp.dp20),
-                )
-                Spacer(Modifier.size(GlimpseDp.dp12))
-                Text(
-                    stringResource(Res.string.create_event_privacy),
-                    style = GlimpseTextStyles.bodySmall,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
-            }
+
+
             Spacer(Modifier.height(GlimpseDp.dp24))
             GlimpsePrimaryButton(
-                stringResource(Res.string.create_event_upload_button, state.photos.size),
+                text = if (state.isUploading) {
+                    stringResource(Res.string.create_event_uploading)
+                } else {
+                    stringResource(Res.string.create_event_upload_button, state.photos.size)
+                },
                 onClick = onUpload,
+                isLoading = state.isUploading,
                 enabled = state.canUpload,
             )
             Spacer(Modifier.height(GlimpseDp.dp32))
@@ -259,32 +250,57 @@ private fun AddPhotosCard(onClick: () -> Unit) {
 }
 
 @Composable
-private fun PhotoRow(photo: SelectedPhoto, onRemove: () -> Unit) {
-    Row(
-        Modifier.fillMaxWidth()
-            .padding(start = GlimpseDp.dp16, top = GlimpseDp.dp12, bottom = GlimpseDp.dp12),
-        verticalAlignment = Alignment.CenterVertically,
+private fun PhotoCard(photo: SelectedPhoto, onRemove: () -> Unit) {
+    val thumbnail = remember(photo.bytes) {
+        runCatching { photo.bytes.decodeToImageBitmap() }.getOrNull()
+    }
+
+    Column(
+        Modifier.width(100.dp)
+            .clip(RoundedCornerShape(GlimpseDp.dp16))
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         Box(
-            Modifier.size(GlimpseDp.dp48).clip(RoundedCornerShape(GlimpseDp.dp12))
+            Modifier.fillMaxWidth().height(100.dp)
                 .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(painterResource(GlimpseIcons.Images), null, Modifier.size(GlimpseDp.dp24))
+            if (thumbnail != null) {
+                Image(
+                    bitmap = thumbnail,
+                    contentDescription = photo.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else {
+                Icon(
+                    painterResource(GlimpseIcons.Images),
+                    contentDescription = null,
+                    modifier = Modifier.size(GlimpseDp.dp24),
+                )
+            }
+
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.align(Alignment.TopEnd),
+            ) {
+                Icon(
+                    painterResource(GlimpseIcons.Close),
+                    stringResource(Res.string.create_event_remove_photo, photo.name),
+                )
+            }
         }
-        Spacer(Modifier.size(GlimpseDp.dp12))
-        Column(Modifier.weight(1f)) {
-            Text(photo.name, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Column(Modifier.padding(GlimpseDp.dp12)) {
+            Text(
+                photo.name,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(Modifier.height(GlimpseDp.dp4))
             Text(
                 formatBytes(photo.sizeBytes),
                 style = GlimpseTextStyles.legal,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-        IconButton(onClick = onRemove) {
-            Icon(
-                painterResource(GlimpseIcons.Close),
-                stringResource(Res.string.create_event_remove_photo, photo.name),
             )
         }
     }
