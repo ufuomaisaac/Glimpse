@@ -41,7 +41,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun CreateEventRoute(
     onBack: () -> Unit,
-    onUploadRequest: (String, List<SelectedPhoto>) -> Unit,
     viewModel: CreateEventViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -66,11 +65,7 @@ fun CreateEventRoute(
             onAddPhotos = picker::launch,
             onRemovePhoto = viewModel::removePhoto,
             onBack = onBack,
-            onUpload = {
-                viewModel.createUpload {
-                    onUploadRequest(state.eventName.trim(), state.photos)
-                }
-            },
+            onUpload = viewModel::upload,
             modifier = Modifier.padding(padding),
         )
     }

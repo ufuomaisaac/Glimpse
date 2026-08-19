@@ -53,9 +53,6 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
                 )
                 createEventDestination(
                     onBack = { navController.popBackStack() },
-                    onUploadRequest = { _, _ ->
-                        // Connect the documented presigned-upload response here.
-                    },
                 )
                 composable<MainGraph> {
                     //StartupBackground()

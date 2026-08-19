@@ -70,7 +70,7 @@
     </plurals>
     <string name="create_event_remove_photo">Remove %1$s</string>
     <string name="create_event_privacy">Your originals upload directly to private R2 storage. Sorting starts after every photo is uploaded.</string>
-    <string name="create_event_uploading">Creating upload…</string>
+    <string name="create_event_uploading">Uploading…</string>
     <string name="create_event_upload_button">Upload &amp; sort %1$d photos</string>
 
     <!-- Sign Up -->

@@ -60,7 +60,7 @@ class CreateEventViewModel(
         _uiState.update { state -> state.copy(photos = state.photos.filterNot { it.id == id }) }
     }
 
-    fun createUpload(onSuccess: () -> Unit) {
+    fun upload() {
         val state = _uiState.value
         if (!state.canUpload) return
 
@@ -68,7 +68,7 @@ class CreateEventViewModel(
         viewModelScope.launch {
             val expiresAt = (Clock.System.now() + state.expirationDays.days).toString()
             when (
-                val result = uploadRepository.createUpload(
+                val result = uploadRepository.upload(
                     name = state.eventName.trim(),
                     expiresAt = expiresAt,
                     fileNames = state.photos.map(SelectedPhoto::name),
@@ -76,7 +76,6 @@ class CreateEventViewModel(
             ) {
                 is ScreenState.Success -> {
                     _uiState.update { it.copy(isUploading = false) }
-                    onSuccess()
                 }
 
                 is ScreenState.Error -> {

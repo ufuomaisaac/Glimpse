@@ -5,7 +5,7 @@ internal object ApiEndPoints {
     const val BASE_URL = "https://glimpse.outray.app/"
 
     const val GET_ALL_UPLOADS            = "/uploads"
-    const val CREATE_UPLOAD_WITH_FILES   = "/api/v1/uploads/with-files"
+    const val UPLOAD_WITH_FILES          = "/api/v1/uploads/with-files"
     const val GET_RECEIVED_CLUSTER       = "/clusters"
     const val GENERATED_CLUSTER          = "/generated_cluster"
 
