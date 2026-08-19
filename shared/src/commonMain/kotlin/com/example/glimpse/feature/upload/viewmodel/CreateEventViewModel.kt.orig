@@ -17,11 +17,10 @@ data class CreateEventUiState(
     val eventName: String = "",
     val photos: List<SelectedPhoto> = emptyList(),
     val expirationDays: Int = 7,
-    val isUploading: Boolean = false,
     val errorMessage: String? = null,
 ) {
     val canUpload: Boolean
-        get() = eventName.isNotBlank() && photos.isNotEmpty() && !isUploading
+        get() = eventName.isNotBlank() && photos.isNotEmpty()
 
     val totalBytes: Long
         get() = photos.sumOf(SelectedPhoto::sizeBytes)

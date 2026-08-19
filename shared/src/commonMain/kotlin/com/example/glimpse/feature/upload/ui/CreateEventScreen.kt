@@ -60,7 +60,11 @@ fun CreateEventRoute(
             onAddPhotos = picker::launch,
             onRemovePhoto = viewModel::removePhoto,
             onBack = onBack,
-            onUpload = { onUploadRequest(state.eventName.trim(), state.photos) },
+            onUpload = {
+                viewModel.createUpload {
+                    onUploadRequest(state.eventName.trim(), state.photos)
+                }
+            },
             modifier = Modifier.padding(padding),
         )
     }
