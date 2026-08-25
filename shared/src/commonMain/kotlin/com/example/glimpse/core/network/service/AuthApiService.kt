@@ -1,5 +1,6 @@
 package com.example.glimpse.core.network.service
 
+import com.example.glimpse.core.network.ApiEndPoints.AUTH_URL
 import com.example.glimpse.core.network.dto.auth.ClerkSignInResponseDto
 import com.example.glimpse.core.network.dto.auth.ClerkSignUpResponseDto
 import io.ktor.client.*
@@ -14,7 +15,7 @@ class AuthApiService(private val client: HttpClient) {
 
     suspend fun signIn(email: String, password: String): ClerkSignInResponseDto =
         client.submitForm(
-            url = "/v1/client/sign_ins",
+            url = "$AUTH_URL/sign_ins",
             formParameters = parameters {
                 append("identifier", email)
                 append("strategy", "password")
@@ -24,7 +25,7 @@ class AuthApiService(private val client: HttpClient) {
 
     suspend fun signUp(email: String, password: String, username: String): ClerkSignUpResponseDto =
         client.submitForm(
-            url = "/v1/client/sign_ups",
+            url = "$AUTH_URL/sign_ups",
             formParameters = parameters {
                 append("email_address", email)
                 append("password", password)
@@ -33,19 +34,19 @@ class AuthApiService(private val client: HttpClient) {
         ).body()
 
     suspend fun prepareEmailVerification(signUpId: String): HttpResponse =
-        client.post("/v1/client/sign_ups/$signUpId/prepare_email_address_verification") {
+        client.post("$AUTH_URL/sign_ups/$signUpId/prepare_email_address_verification") {
             contentType(ContentType.Application.Json)
             setBody(PrepareVerificationRequest("email_code"))
         }
 
     suspend fun verifyEmail(signUpId: String, code: String): ClerkSignUpResponseDto =
-        client.post("/v1/client/sign_ups/$signUpId/attempt_email_address_verification") {
+        client.post("$AUTH_URL/sign_ups/$signUpId/attempt_email_address_verification") {
             contentType(ContentType.Application.Json)
             setBody(VerifyEmailRequest(code))
         }.body()
 
     suspend fun signOut(sessionId: String): HttpResponse =
-        client.delete("/v1/client/sessions/$sessionId")
+        client.delete("AUTH_URL/sessions/$sessionId")
 
     @Serializable
     private data class PrepareVerificationRequest(val strategy: String)
