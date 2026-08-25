@@ -2,7 +2,9 @@ package com.example.glimpse.core.network.service
 
 import co.touchlab.kermit.Logger
 import com.example.glimpse.core.network.ApiEndPoints
-import com.example.glimpse.core.network.AuthApiConstants
+import com.example.glimpse.core.network.ApiEndPoints.AUTH_URL
+import com.example.glimpse.core.network.ApiEndPoints.SIGN_IN
+import com.example.glimpse.core.network.ApiEndPoints.SIGN_UP
 import com.example.glimpse.core.network.dto.auth.ClerkSignInResponseDto
 import com.example.glimpse.core.network.dto.auth.ClerkSignUpResponseDto
 import io.ktor.client.*
