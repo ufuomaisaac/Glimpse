@@ -51,7 +51,7 @@ class UploadApiService(private val client: HttpClient) {
         val requestBody = UploadRequest(name, expiresAt, fileNames.map(::FileRequest))
 
         logger.i {
-            UploadApiConstants.requestLog(endpoint, Json.encodeToString(requestBody))
+            "Upload request: method=POST, endpoint=$endpoint, body=${Json.encodeToString(requestBody)}"
         }
 
         return try {
@@ -60,12 +60,12 @@ class UploadApiService(private val client: HttpClient) {
                 setBody(requestBody)
             }.also { response ->
                 logger.i {
-                    UploadApiConstants.responseLog(endpoint, response.status.value)
+                    "POST $endpoint reached server; response status=${response.status.value}"
                 }
             }
         } catch (exception: Exception) {
             logger.e(exception) {
-                UploadApiConstants.failureLog(endpoint)
+                "POST $endpoint failed before receiving a response"
             }
             throw exception
         }
@@ -84,7 +84,7 @@ class UploadApiService(private val client: HttpClient) {
             setBody(CompleteUploadRequest(keys.map { FileKeyRequest(it) }))
         }
 
-    //Make this asynchronous
+
     suspend fun uploadPhotos(
         presignedUrls: List<String>,
         photos: List<ByteArray>,

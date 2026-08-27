@@ -45,22 +45,3 @@ internal object AuthApiConstants {
     const val PASSWORD_STRATEGY = "password"
     const val EMAIL_CODE_STRATEGY = "email_code"
 }
-
-internal object UploadApiConstants {
-    const val LOG_TAG = "UploadApiService"
-    const val PAGE = "page"
-    const val LIMIT = "limit"
-    const val SORT = "sort"
-    const val ORDER = "order"
-    const val SEARCH = "search"
-    const val STATUS = "status"
-
-    fun requestLog(endpoint: String, body: String) =
-        "Upload request: method=POST, endpoint=$endpoint, body=$body"
-
-    fun responseLog(endpoint: String, status: Int) =
-        "POST $endpoint reached server; response status=$status"
-
-    fun failureLog(endpoint: String) =
-        "POST $endpoint failed before receiving a response"
-}
