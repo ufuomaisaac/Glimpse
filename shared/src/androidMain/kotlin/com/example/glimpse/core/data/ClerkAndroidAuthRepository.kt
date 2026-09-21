@@ -35,7 +35,7 @@ class ClerkAndroidAuthRepository(
         val initializationError = ensureClerkReady()
         val signedIn = initializationError == null && Clerk.isSignedIn ||
             tokenStorage.getToken() != null
-        if (signedIn) userRepository.restore()
+        if (signedIn) userRepository.getUser()
         return signedIn
     }
 
