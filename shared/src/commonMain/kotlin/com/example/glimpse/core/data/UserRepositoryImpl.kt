@@ -13,7 +13,7 @@ class UserRepositoryImpl(
     private val _currentUser = MutableStateFlow<User?>(null)
     override val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
 
-    override suspend fun restore() {
+    override suspend fun getUser() {
         _currentUser.value = storage.getUser()
     }
 

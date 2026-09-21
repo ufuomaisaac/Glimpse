@@ -28,15 +28,16 @@ class AuthRepositoryImpl(
 
     override suspend fun isSignedIn(): Boolean {
         val signedIn = tokenStorage.getToken() != null
-        if (signedIn) userRepository.restore()
+        if (signedIn) userRepository.getUser()
         return signedIn
     }
 
     override suspend fun signIn(email: String, password: String): ScreenState<Unit> = try {
         val session = authApiService.signIn(email, password).toDomain()
             ?: return ScreenState.Error(getString(Res.string.error_sign_in_no_session))
+
         tokenStorage.saveToken(session.token)
-        userRepository.setUser(userFromEmail(email))
+        userRepository.getUser()
         ScreenState.Success(Unit)
     } catch (e: Exception) {
         ScreenState.Error(e.message ?: getString(Res.string.error_sign_in_failed))
@@ -95,7 +96,4 @@ class AuthRepositoryImpl(
     }
 }
 
-private fun userFromEmail(email: String): User = User(
-    displayName = email.substringBefore('@').ifBlank { "User" },
-    email = email,
-)
+
