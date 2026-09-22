@@ -98,5 +98,9 @@
     <string name="error_verification_no_session">Verification failed: no session in response</string>
     <string name="error_sign_out_failed">Sign out failed</string>
 
+    <!-- Upload errors -->
+    <string name="error_upload_failed">Could not upload</string>
+    <string name="error_upload_failed_with_status">Could not upload (%1$d)</string>
+
 
 </resources>
