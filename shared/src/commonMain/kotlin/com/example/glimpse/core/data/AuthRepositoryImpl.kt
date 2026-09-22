@@ -54,7 +54,7 @@ class AuthRepositoryImpl(
         val response = authApiService.signUp(email, password, username)
         val user = User(displayName = username, email = email)
         when {
-            response.response.status == "complete" -> {
+            response.response.status == STATUS_COMPLETE -> {
                 val session = response.toDomain()
                     ?: return ScreenState.Error(getString(Res.string.error_sign_up_no_session))
                 tokenStorage.saveToken(session.token)
@@ -62,7 +62,7 @@ class AuthRepositoryImpl(
                 pendingUser = null
                 ScreenState.Success(SignUpOutcome.Complete)
             }
-            response.response.unverifiedFields.contains("email_address") -> {
+            FIELD_EMAIL_ADDRESS in response.response.unverifiedFields -> {
                 pendingUser = user
                 authApiService.prepareEmailVerification(response.response.id)
                 ScreenState.Success(SignUpOutcome.NeedsEmailVerification(response.response.id))
@@ -93,6 +93,11 @@ class AuthRepositoryImpl(
         ScreenState.Success(Unit)
     } catch (e: Exception) {
         ScreenState.Error(e.message ?: getString(Res.string.error_sign_out_failed))
+    }
+
+    private companion object {
+        const val STATUS_COMPLETE = "complete"
+        const val FIELD_EMAIL_ADDRESS = "email_address"
     }
 }
 

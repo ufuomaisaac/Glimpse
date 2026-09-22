@@ -39,7 +39,7 @@ import org.jetbrains.compose.resources.decodeToImageBitmap
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun CreateEventRoute(
+fun  CreateEventRoute(
     onBack: () -> Unit,
     viewModel: CreateEventViewModel = koinViewModel(),
 ) {
