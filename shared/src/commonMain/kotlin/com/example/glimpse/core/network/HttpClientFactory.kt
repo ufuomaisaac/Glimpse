@@ -13,7 +13,7 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
 
-internal fun createAuthHttpClient(): HttpClient {
+internal fun createClerkHttpClient(): HttpClient {
     val json = Json {
         ignoreUnknownKeys = true
         isLenient = true
@@ -59,7 +59,7 @@ private fun parseClerkErrorMessage(json: Json, body: String): String? {
         ?: body.takeIf { it.isNotBlank() }?.take(300)
 }
 
-internal fun createHttpClient(tokenProvider: TokenProvider): HttpClient {
+internal fun createBackendHttpClient(tokenProvider: TokenProvider): HttpClient {
     val authLogger = KermitLogger.withTag("HttpAuth")
     val client = HttpClient {
         install(ContentNegotiation) {
@@ -86,7 +86,6 @@ internal fun createHttpClient(tokenProvider: TokenProvider): HttpClient {
         if (!token.isNullOrBlank()) {
             request.headers["Authorization"] = "Bearer $token"
             authLogger.d { "Attached bearer token to ${request.url}" }
-            authLogger.d { "Raw bearer token: $token" }
         } else {
             authLogger.w { "No bearer token available for ${request.url}" }
         }
