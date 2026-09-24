@@ -85,9 +85,9 @@ internal fun createBackendHttpClient(tokenProvider: TokenProvider): HttpClient {
         val token = tokenProvider.getToken()
         if (!token.isNullOrBlank()) {
             request.headers["Authorization"] = "Bearer $token"
-            authLogger.d { "Attached bearer token to ${request.url}" }
+            //authLogger.d { "Attached bearer token to ${request.url}" }
         } else {
-            authLogger.w { "No bearer token available for ${request.url}" }
+            //authLogger.w { "No bearer token available for ${request.url}" }
         }
         execute(request)
     }
