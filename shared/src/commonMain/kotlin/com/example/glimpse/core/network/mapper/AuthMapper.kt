@@ -1,8 +1,8 @@
 package com.example.glimpse.core.network.mapper
 
 import com.example.glimpse.core.model.AuthSession
-import com.example.glimpse.core.network.dto.auth.ClerkSignInResponseDto
-import com.example.glimpse.core.network.dto.auth.ClerkSignUpResponseDto
+import com.example.glimpse.core.network.dto.ClerkSignInResponseDto
+import com.example.glimpse.core.network.dto.ClerkSignUpResponseDto
 
 fun ClerkSignInResponseDto.toDomain(): AuthSession? {
     val sessionId = response.createdSessionId ?: return null

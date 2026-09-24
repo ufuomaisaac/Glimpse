@@ -1,4 +1,4 @@
-package com.example.glimpse.core.network.dto.auth
+package com.example.glimpse.core.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

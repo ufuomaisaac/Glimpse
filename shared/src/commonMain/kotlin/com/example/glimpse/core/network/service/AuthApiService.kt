@@ -1,7 +1,7 @@
 package com.example.glimpse.core.network.service
 
-import com.example.glimpse.core.network.dto.auth.ClerkSignInResponseDto
-import com.example.glimpse.core.network.dto.auth.ClerkSignUpResponseDto
+import com.example.glimpse.core.network.dto.ClerkSignInResponseDto
+import com.example.glimpse.core.network.dto.ClerkSignUpResponseDto
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

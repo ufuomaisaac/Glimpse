@@ -19,7 +19,7 @@ class UploadApiService(private val client: HttpClient) {
 
     private val logger = Logger.withTag("UploadApiService")
 
-    suspend fun getAllUploads(
+    /*suspend fun getAllUploads(
         page: Int? = null,
         limit: Int? = null,
         sort: String? = null,
@@ -33,13 +33,13 @@ class UploadApiService(private val client: HttpClient) {
         order?.let { parameter("order", it) }
         search?.let { parameter("search", it) }
         status?.let { parameter("status", it.name.lowercase()) }
-    }.body()
+    }.body()*/
 
-    suspend fun getUploadById(id: String): UploadDto =
+    /*suspend fun getUploadById(id: String): UploadDto =
         client.get(ApiEndPoints.getUploadById(id)).body()
 
     suspend fun deleteUpload(id: String): HttpResponse =
-        client.delete(ApiEndPoints.deleteUpload(id))
+        client.delete(ApiEndPoints.deleteUpload(id))*/
 
     suspend fun upload(
         name: String,
@@ -70,21 +70,21 @@ class UploadApiService(private val client: HttpClient) {
         }
     }
 
-    suspend fun updateUpload(uploadId: String, name: String, expiresAt: String): HttpResponse {
+   /* suspend fun updateUpload(uploadId: String, name: String, expiresAt: String): HttpResponse {
         return client.patch(ApiEndPoints.updateUpload(uploadId)) {
             contentType(ContentType.Application.Json)
             setBody(UpdateUploadRequest(name, expiresAt))
         }
-    }
+    }*/
 
-    suspend fun completeUpload(uploadId: String, keys: List<String>): HttpResponse =
+    /*suspend fun completeUpload(uploadId: String, keys: List<String>): HttpResponse =
         client.post(ApiEndPoints.uploadStatus(uploadId)) {
             contentType(ContentType.Application.Json)
             setBody(CompleteUploadRequest(keys.map { FileKeyRequest(it) }))
-        }
+        }*/
 
 
-    suspend fun uploadPhotos(
+    /*suspend fun uploadPhotos(
         presignedUrls: List<String>,
         photos: List<ByteArray>,
         onProgress: (Float) -> Unit,
@@ -101,7 +101,7 @@ class UploadApiService(private val client: HttpClient) {
                 }
             }
         }
-    }
+    }*/
 
     @Serializable
     private data class UploadRequest(

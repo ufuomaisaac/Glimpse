@@ -1,7 +1,7 @@
 package com.example.glimpse.core.network
 
 import co.touchlab.kermit.Logger as KermitLogger
-import com.example.glimpse.core.network.dto.auth.ClerkErrorResponseDto
+import com.example.glimpse.core.network.dto.ClerkErrorResponseDto
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -11,7 +11,6 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.client.request.headers
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.http.HttpHeaders
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 internal fun createAuthHttpClient(): HttpClient {
