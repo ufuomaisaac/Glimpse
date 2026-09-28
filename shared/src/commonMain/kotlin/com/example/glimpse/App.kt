@@ -71,11 +71,3 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
 }
 
 
-@Composable
-private fun StartupBackground() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Background),
-    )
-}
