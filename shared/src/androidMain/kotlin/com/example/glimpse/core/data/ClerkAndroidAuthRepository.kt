@@ -10,7 +10,7 @@ import com.clerk.api.sso.OAuthResult
 import com.clerk.api.signup.SignUp
 import com.clerk.api.signup.sendEmailCode
 import com.clerk.api.signup.verifyCode
-import com.example.glimpse.core.common.ScreenState
+import com.example.glimpse.core.common.DataState
 import com.example.glimpse.core.data.storage.TokenStorage
 import com.example.glimpse.core.model.SignUpOutcome
 import com.example.glimpse.core.model.User
@@ -39,8 +39,8 @@ class ClerkAndroidAuthRepository(
         return signedIn
     }
 
-    override suspend fun signIn(email: String, password: String): ScreenState<Unit> {
-        ensureClerkReady()?.let { return ScreenState.Error(it) }
+    override suspend fun signIn(email: String, password: String): DataState<Unit> {
+        ensureClerkReady()?.let { return DataState.Error(it) }
         val submittedEmail = email
         val submittedPassword = password
         return when (val result = Clerk.auth.signInWithPassword {
@@ -53,13 +53,13 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "signIn failure: ${result.authErrorMessage}; detail=${result.debugDescription}", result.throwable)
-                ScreenState.Error(result.authErrorMessage)
+                DataState.Error(result.authErrorMessage)
             }
         }
     }
 
-    override suspend fun continueWithGoogle(): ScreenState<Unit> {
-        ensureClerkReady()?.let { return ScreenState.Error(it) }
+    override suspend fun continueWithGoogle(): DataState<Unit> {
+        ensureClerkReady()?.let { return DataState.Error(it) }
         return when (val result = Clerk.auth.signUpWithGoogleOneTap()) {
             is ClerkResult.Success -> {
                 Log.d(TAG, "google auth success: signIn=${result.value.signIn?.status}, signUp=${result.value.signUp?.status}")
@@ -70,13 +70,13 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "google auth failure: ${result.authErrorMessage}; detail=${result.debugDescription}", result.throwable)
-                ScreenState.Error(result.authErrorMessage)
+                DataState.Error(result.authErrorMessage)
             }
         }
     }
 
-    override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> {
-        ensureClerkReady()?.let { return ScreenState.Error(it) }
+    override suspend fun signUp(email: String, password: String, username: String): DataState<SignUpOutcome> {
+        ensureClerkReady()?.let { return DataState.Error(it) }
         val submittedEmail = email
         val submittedPassword = password
         val submittedUsername = username
@@ -91,15 +91,15 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "signUp failure: ${result.authErrorMessage}", result.throwable)
-                ScreenState.Error(result.authErrorMessage)
+                DataState.Error(result.authErrorMessage)
             }
         }
     }
 
-    override suspend fun verifyEmail(signUpId: String, code: String): ScreenState<Unit> {
-        ensureClerkReady()?.let { return ScreenState.Error(it) }
+    override suspend fun verifyEmail(signUpId: String, code: String): DataState<Unit> {
+        ensureClerkReady()?.let { return DataState.Error(it) }
         val signUp = Clerk.auth.currentSignUp
-            ?: return ScreenState.Error(getString(Res.string.error_verification_no_session))
+            ?: return DataState.Error(getString(Res.string.error_verification_no_session))
 
         return when (val result = signUp.verifyCode(code, VerificationType.EMAIL)) {
             is ClerkResult.Success -> {
@@ -108,39 +108,39 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "verifyEmail failure: ${result.authErrorMessage}", result.throwable)
-                ScreenState.Error(result.authErrorMessage)
+                DataState.Error(result.authErrorMessage)
             }
         }
     }
 
-    override suspend fun signOut(): ScreenState<Unit> {
+    override suspend fun signOut(): DataState<Unit> {
         if (ensureClerkReady() == null) {
             Clerk.auth.signOut()
         }
         tokenStorage.clearToken()
         userRepository.clearUser()
         pendingUser = null
-        return ScreenState.Success(Unit)
+        return DataState.Success(Unit)
     }
 
     private suspend fun completeOAuthResult(
         result: OAuthResult,
         user: User,
-    ): ScreenState<Unit> {
+    ): DataState<Unit> {
         result.signIn?.let { return completeSignIn(it, user) }
         result.signUp?.let { return completeSignUp(it, user) }
-        return ScreenState.Error(getString(Res.string.error_sign_in_no_session))
+        return DataState.Error(getString(Res.string.error_sign_in_no_session))
     }
 
-    private suspend fun completeSignIn(signIn: SignIn, user: User?): ScreenState<Unit> {
+    private suspend fun completeSignIn(signIn: SignIn, user: User?): DataState<Unit> {
         if (signIn.status != SignIn.Status.COMPLETE) {
-            return ScreenState.Error(
+            return DataState.Error(
                 getString(Res.string.error_sign_in_status, signIn.status.name.lowercase())
             )
         }
 
         val sessionId = signIn.createdSessionId
-            ?: return ScreenState.Error(getString(Res.string.error_sign_in_no_session))
+            ?: return DataState.Error(getString(Res.string.error_sign_in_no_session))
 
         return when (val activeResult = Clerk.auth.setActive(sessionId)) {
             is ClerkResult.Success -> {
@@ -149,7 +149,7 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "setActive failure: ${activeResult.authErrorMessage}", activeResult.throwable)
-                ScreenState.Error(activeResult.authErrorMessage)
+                DataState.Error(activeResult.authErrorMessage)
             }
         }
     }
@@ -157,14 +157,14 @@ class ClerkAndroidAuthRepository(
     private suspend fun handleSignUpResult(
         signUp: SignUp,
         user: User,
-    ): ScreenState<SignUpOutcome> = when (signUp.status) {
+    ): DataState<SignUpOutcome> = when (signUp.status) {
         SignUp.Status.COMPLETE ->
             completeSignUp(signUp, user).mapSuccess { SignUpOutcome.Complete }
         SignUp.Status.MISSING_REQUIREMENTS -> {
             pendingUser = user
             sendEmailVerificationCode(signUp, user.email)
         }
-        else -> ScreenState.Error(
+        else -> DataState.Error(
             getString(Res.string.error_sign_up_status, signUp.status.name.lowercase())
         )
     }
@@ -172,26 +172,26 @@ class ClerkAndroidAuthRepository(
     private suspend fun sendEmailVerificationCode(
         signUp: SignUp,
         email: String,
-    ): ScreenState<SignUpOutcome> = when (val result = signUp.sendEmailCode()) {
+    ): DataState<SignUpOutcome> = when (val result = signUp.sendEmailCode()) {
         is ClerkResult.Success -> {
             Log.d(TAG, "sendEmailCode success: id=${result.value.id}, status=${result.value.status}, unverified=${result.value.unverifiedFields}")
-            ScreenState.Success(SignUpOutcome.NeedsEmailVerification(result.value.id))
+            DataState.Success(SignUpOutcome.NeedsEmailVerification(result.value.id))
         }
         is ClerkResult.Failure -> {
             Log.e(TAG, "sendEmailCode failure: ${result.authErrorMessage}", result.throwable)
-            ScreenState.Error(result.authErrorMessage)
+            DataState.Error(result.authErrorMessage)
         }
     }
 
-    private suspend fun completeSignUp(signUp: SignUp, user: User?): ScreenState<Unit> {
+    private suspend fun completeSignUp(signUp: SignUp, user: User?): DataState<Unit> {
         if (signUp.status != SignUp.Status.COMPLETE) {
-            return ScreenState.Error(
+            return DataState.Error(
                 getString(Res.string.error_sign_up_status, signUp.status.name.lowercase())
             )
         }
 
         val sessionId = signUp.createdSessionId
-            ?: return ScreenState.Error(getString(Res.string.error_sign_up_no_session))
+            ?: return DataState.Error(getString(Res.string.error_sign_up_no_session))
 
         return when (val activeResult = Clerk.auth.setActive(sessionId)) {
             is ClerkResult.Success -> {
@@ -200,20 +200,20 @@ class ClerkAndroidAuthRepository(
             }
             is ClerkResult.Failure -> {
                 Log.e(TAG, "setActive failure: ${activeResult.authErrorMessage}", activeResult.throwable)
-                ScreenState.Error(activeResult.authErrorMessage)
+                DataState.Error(activeResult.authErrorMessage)
             }
         }
     }
 
-    private suspend fun saveCurrentToken(user: User?): ScreenState<Unit> = when (val tokenResult = Clerk.auth.getToken()) {
+    private suspend fun saveCurrentToken(user: User?): DataState<Unit> = when (val tokenResult = Clerk.auth.getToken()) {
         is ClerkResult.Success -> {
             Log.d(TAG, "token fetch success")
             tokenStorage.saveToken(tokenResult.value)
             user?.let { userRepository.setUser(it) }
             pendingUser = null
-            ScreenState.Success(Unit)
+            DataState.Success(Unit)
         }
-        is ClerkResult.Failure -> ScreenState.Error(
+        is ClerkResult.Failure -> DataState.Error(
             tokenResult.authErrorMessage.takeIf { it.isNotBlank() }
                 ?: getString(Res.string.error_sign_in_no_session)
         )
@@ -229,11 +229,11 @@ class ClerkAndroidAuthRepository(
         return initializationError?.message
     }
 
-    private inline fun <T, R> ScreenState<T>.mapSuccess(transform: (T) -> R): ScreenState<R> =
+    private inline fun <T, R> DataState<T>.mapSuccess(transform: (T) -> R): DataState<R> =
         when (this) {
-            is ScreenState.Success -> ScreenState.Success(transform(data))
-            is ScreenState.Error -> this
-            ScreenState.Loading -> ScreenState.Loading
+            is DataState.Success -> DataState.Success(transform(data))
+            is DataState.Error -> this
+            DataState.Loading -> DataState.Loading
         }
 }
 

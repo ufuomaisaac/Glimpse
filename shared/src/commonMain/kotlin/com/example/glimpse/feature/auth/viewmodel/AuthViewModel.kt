@@ -2,7 +2,7 @@ package com.example.glimpse.feature.auth.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.glimpse.core.common.ScreenState
+import com.example.glimpse.core.common.DataState
 import com.example.glimpse.core.data.AuthRepository
 import com.example.glimpse.core.model.SignUpOutcome
 import glimpse.shared.generated.resources.Res
@@ -41,8 +41,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
             _uiState.value = when (val result = authRepository.signIn(email, password)) {
-                is ScreenState.Success -> AuthUiState.SignedIn
-                is ScreenState.Error -> AuthUiState.Error(result.message)
+                is DataState.Success -> AuthUiState.SignedIn
+                is DataState.Error -> AuthUiState.Error(result.message)
                 else -> AuthUiState.Error(getString(Res.string.error_unexpected))
             }
         }
@@ -52,8 +52,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
             _uiState.value = when (val result = authRepository.continueWithGoogle()) {
-                is ScreenState.Success -> AuthUiState.SignedIn
-                is ScreenState.Error -> AuthUiState.Error(result.message)
+                is DataState.Success -> AuthUiState.SignedIn
+                is DataState.Error -> AuthUiState.Error(result.message)
                 else -> AuthUiState.Error(getString(Res.string.error_unexpected))
             }
         }
@@ -63,7 +63,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
             _uiState.value = when (val result = authRepository.signUp(email, password, username)) {
-                is ScreenState.Success -> when (result.data) {
+                is DataState.Success -> when (result.data) {
                     is SignUpOutcome.Complete -> AuthUiState.SignedIn
                     is SignUpOutcome.NeedsEmailVerification ->
                         AuthUiState.AwaitingEmailVerification(
@@ -71,7 +71,7 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
                             email = email,
                         )
                 }
-                is ScreenState.Error -> AuthUiState.Error(result.message)
+                is DataState.Error -> AuthUiState.Error(result.message)
                 else -> AuthUiState.Error(getString(Res.string.error_unexpected))
             }
         }
@@ -81,8 +81,8 @@ class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
             _uiState.value = when (val result = authRepository.verifyEmail(signUpId, code)) {
-                is ScreenState.Success -> AuthUiState.SignedIn
-                is ScreenState.Error -> AuthUiState.Error(result.message)
+                is DataState.Success -> AuthUiState.SignedIn
+                is DataState.Error -> AuthUiState.Error(result.message)
                 else -> AuthUiState.Error(getString(Res.string.error_unexpected))
             }
         }

@@ -1,6 +1,6 @@
 package com.example.glimpse.core.data
 
-import com.example.glimpse.core.common.ScreenState
+import com.example.glimpse.core.common.DataState
 import com.example.glimpse.core.data.storage.TokenStorage
 import com.example.glimpse.core.model.SignUpOutcome
 import com.example.glimpse.core.network.service.AuthApiService
@@ -21,22 +21,22 @@ private class IosClerkBridgeRequiredAuthRepository(
         return signedIn
     }
 
-    override suspend fun signIn(email: String, password: String): ScreenState<Unit> =
-        ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
+    override suspend fun signIn(email: String, password: String): DataState<Unit> =
+        DataState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
 
-    override suspend fun continueWithGoogle(): ScreenState<Unit> =
-        ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
+    override suspend fun continueWithGoogle(): DataState<Unit> =
+        DataState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
 
-    override suspend fun signUp(email: String, password: String, username: String): ScreenState<SignUpOutcome> =
-        ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
+    override suspend fun signUp(email: String, password: String, username: String): DataState<SignUpOutcome> =
+        DataState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
 
-    override suspend fun verifyEmail(signUpId: String, code: String): ScreenState<Unit> =
-        ScreenState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
+    override suspend fun verifyEmail(signUpId: String, code: String): DataState<Unit> =
+        DataState.Error(IOS_CLERK_BRIDGE_REQUIRED_MESSAGE)
 
-    override suspend fun signOut(): ScreenState<Unit> {
+    override suspend fun signOut(): DataState<Unit> {
         tokenStorage.clearToken()
         userRepository.clearUser()
-        return ScreenState.Success(Unit)
+        return DataState.Success(Unit)
     }
 }
 

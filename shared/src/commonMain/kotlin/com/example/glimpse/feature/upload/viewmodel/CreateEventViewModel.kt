@@ -2,7 +2,7 @@ package com.example.glimpse.feature.upload.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.glimpse.core.common.ScreenState
+import com.example.glimpse.core.common.DataState
 import com.example.glimpse.core.data.UploadRepository
 import com.example.glimpse.feature.upload.model.SelectedPhoto
 import kotlinx.coroutines.launch
@@ -74,11 +74,11 @@ class CreateEventViewModel(
                     fileNames = state.photos.map(SelectedPhoto::name),
                 )
             ) {
-                is ScreenState.Success -> {
+                is DataState.Success -> {
                     _uiState.update { it.copy(isUploading = false) }
                 }
 
-                is ScreenState.Error -> {
+                is DataState.Error -> {
                     _uiState.update {
                         it.copy(
                             isUploading = false,
@@ -87,7 +87,7 @@ class CreateEventViewModel(
                     }
                 }
 
-                ScreenState.Loading -> Unit
+                DataState.Loading -> Unit
             }
         }
     }
